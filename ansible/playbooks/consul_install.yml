@@ -1,0 +1,7 @@
+---
+- name: Installing consul on consul_instances
+  hosts: tag_consul-instances
+  become: true
+  roles:
+    - role: brianshumate.consul 
+      consul_group_name: "tag_consul-instances"      

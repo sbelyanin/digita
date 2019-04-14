@@ -1,0 +1,6 @@
+---
+- name: Installing nomad on nomad-instances
+  hosts: tag_nomad-instances
+  become: true
+  roles:
+    - role: geerlingguy.docker

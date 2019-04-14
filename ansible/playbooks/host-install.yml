@@ -1,0 +1,133 @@
+---
+# Host for Gitlab install Playbook
+- name: DIGITA Instance
+  hosts: localhost
+  vars:
+    service_account_email: "87352832204-compute@developer.gserviceaccount.com"
+    credentials_file: "~/gcp/infra.json"
+    project_id: "docker-9"
+    provisioner_user: "ansible"
+    provisioner_key: "~/.ssh/ansible.pub"
+  tasks:
+    - name: Create Firewall Rule for http/s access
+      gce_net:
+        name: default
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        fwname: "digita-firewall-rule"
+        allowed: tcp:80;tcp:443
+        state: "present"
+        target_tags: "digita-host"
+        src_range: ['0.0.0.0/0']
+
+    - name: create a disk for cnode
+      gce_pd:
+         name: 'disk-cnode'
+         disk_type: pd-standard
+         size_gb: 30
+         image_family: ubuntu-1604-lts
+         service_account_email: "{{ service_account_email }}"
+         credentials_file: "{{ credentials_file }}"
+         project_id: "{{ project_id }}"
+         zone: europe-west1-b
+         state: present
+      register: disk
+
+    - name: create a disk for wnode
+      gce_pd:
+         name: 'disk-wnode'
+         disk_type: pd-standard
+         size_gb: 50 
+         image_family: ubuntu-1604-lts
+         service_account_email: "{{ service_account_email }}"
+         credentials_file: "{{ credentials_file }}"
+         project_id: "{{ project_id }}"
+         zone: europe-west1-b
+         state: present  
+      register: disk
+
+    - name: Get the default SSH key
+      command: cat "{{ provisioner_key }}"
+      register: ssh_key
+
+    - name: create control node instances
+      gce:
+        instance_names: digita-cnode
+        zone: europe-west1-b 
+        machine_type: n1-standard-1
+        state: present
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        disks:
+           - name: disk-cnode
+             mode: READ_WRITE
+        metadata : '{ 
+             "startup-script" : "apt-get update",
+             "consul_node_role" : "server",
+             "nomad_node_role" : "server",
+             "sshKeys":"{{ provisioner_user }}:{{ ssh_key.stdout }}" 
+          }'
+        tags: 
+          - digita-host
+          - chode
+          - consul-instances
+          - nomad-instances
+      register: gce
+
+    - name: Save host data
+      add_host:
+        hostname: "{{ item.public_ip }}"
+        groupname: gce_instances_ips
+      with_items: "{{ gce.instance_data }}"
+
+    - name: Wait for SSH for instances
+      wait_for:
+        delay: 1
+        host: "{{ item.public_ip }}"
+        port: 22
+        state: started
+        timeout: 30
+      with_items: "{{ gce.instance_data }}"
+
+    - name: create worker node instances
+      gce:
+        instance_names: digita-wnode
+        zone: europe-west1-b
+        machine_type: n1-standard-2
+        state: present
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        disks:
+           - name: disk-wnode
+             mode: READ_WRITE
+        metadata : '{
+             "startup-script" : "apt-get update",
+             "consul_node_role" : "client",
+             "nomad_node_role" : "server",
+             "sshKeys":"{{ provisioner_user }}:{{ ssh_key.stdout }}"
+          }'
+        tags: 
+         - digita-host
+         - wnode
+         - consul-instances
+         - nomad-instances
+      register: gce
+
+    - name: Save host data
+      add_host:
+        hostname: "{{ item.public_ip }}"
+        groupname: gce_instances_ips
+      with_items: "{{ gce.instance_data }}"
+
+    - name: Wait for SSH for instances
+      wait_for:
+        delay: 1
+        host: "{{ item.public_ip }}"
+        port: 22
+        state: started
+        timeout: 30
+      with_items: "{{ gce.instance_data }}"
+

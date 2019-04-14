@@ -1,0 +1,6 @@
+---
+- name: Display all variables/facts known for a host
+  hosts: digita-cnode
+  tasks:
+    - debug:
+        var: hostvars[inventory_hostname]['gce_metadata']

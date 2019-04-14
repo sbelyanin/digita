@@ -1,0 +1,8 @@
+---
+- name: Installing nomad on nomad-instances
+  hosts: tag_nomad-instances
+  become: true
+  roles:
+    - role: brianshumate.nomad
+      nomad_group_name: "tag_nomad-instances"      
+      nomad_docker_enable: "true"
