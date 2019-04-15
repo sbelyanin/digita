@@ -47,6 +47,7 @@
   with_items:
     - "{{ nomad_data_dir }}"
     - "{{ nomad_log_dir }}"
+    - "{{ nomad_jobs_dir }}"
 
 - name: Create config directory
   file:

@@ -6,3 +6,8 @@
     - role: brianshumate.nomad
       nomad_group_name: "tag_nomad-instances"      
       nomad_docker_enable: "true"
+      nomad_use_consul: "true"
+      nomad_options:
+        driver.raw_exec.enable: 1
+#      nomad_bind_address: "0.0.0.0"
+#      nomad_advertise_address: "0.0.0.0"

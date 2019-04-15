@@ -25,6 +25,7 @@ nomad_data_dir: "/var/nomad"
 nomad_lockfile: "/var/lock/subsys/nomad"
 nomad_log_dir: "/var/log/nomad"
 nomad_run_dir: "/var/run/nomad"
+nomad_jobs_dir: "/srv/nomad/jobs"
 
 ### System user and group
 nomad_manage_user: true

@@ -3,4 +3,6 @@
   hosts: digita-cnode
   tasks:
     - debug:
-        var: hostvars[inventory_hostname]['gce_metadata']
+         var: hostvars[inventory_hostname]
+
+#        var: hostvars[inventory_hostname]['gce_metadata']
