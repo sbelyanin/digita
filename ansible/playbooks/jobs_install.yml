@@ -1,0 +1,23 @@
+---
+- name: Copy and run jobs nomad cluster
+  hosts: digita-cnode
+  become: true
+  vars:
+    nomad_jobs_dir: "/srv/nomad/jobs"
+    nomad_jobs_file:
+#      - "fabio.nomad"
+       - "nginx.nomad"
+  tasks:
+    - name: Copy jobs config files into node
+      copy:
+        src: "../files/{{ item }}"
+        dest: "{{ nomad_jobs_dir }}"
+      with_items: "{{ nomad_jobs_file }}"
+
+    - name: Run jobs into nomad cluster
+      shell: |
+        export NOMAD_ADDR="http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:4646"
+        nomad run "{{ item }}"
+      args:
+        chdir: "{{ nomad_jobs_dir }}"
+      with_items: "{{ nomad_jobs_file }}" 
