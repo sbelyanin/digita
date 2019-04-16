@@ -37,7 +37,6 @@ job "traefik" {
           "--consul=true",
           "--entrypoints=Name:http Address::9080",
           "--entrypoints=Name:https Address::9443",
-          "--entrypoints=Name:traefik Address::9090"
         ]
         
       }
@@ -57,7 +56,7 @@ job "traefik" {
           }
 
           port "admin" {
-            static = "9090"
+            static = "8080"
           }
 
         }

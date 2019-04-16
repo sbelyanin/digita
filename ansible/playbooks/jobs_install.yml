@@ -8,6 +8,7 @@
 #      - "fabio.nomad"
 #       - "nginx.nomad"
        - "traefik.nomad"
+       - "hashi-ui.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:
