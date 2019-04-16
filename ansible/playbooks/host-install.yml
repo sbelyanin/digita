@@ -65,7 +65,7 @@
              mode: READ_WRITE
         metadata : '{ 
              "startup-script" : "apt-get update",
-             "consul_node_role" : "server",
+             "consul_node_role" : "client",
              "nomad_node_role" : "server",
              "sshKeys":"{{ provisioner_user }}:{{ ssh_key.stdout }}" 
           }'
@@ -105,8 +105,8 @@
              mode: READ_WRITE
         metadata : '{
              "startup-script" : "apt-get update",
-             "consul_node_role" : "client",
-             "nomad_node_role" : "server",
+             "consul_node_role" : "bootstrap",
+             "nomad_node_role" : "both",
              "sshKeys":"{{ provisioner_user }}:{{ ssh_key.stdout }}"
           }'
         tags: 

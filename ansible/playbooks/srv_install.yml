@@ -1,0 +1,15 @@
+---
+- name: Copy service for consul
+  hosts: digita-wnode
+  become: true
+  vars:
+    consul_srv_dir: "/etc/consul/consul.d/"
+    consul_srv_files:
+      - "consul_ui.json"
+      - "nomad_ui.json"
+  tasks:
+    - name: Copy services config files into node
+      copy:
+        src: "../files/consul/{{ item }}"
+        dest: "{{ consul_srv_dir }}"
+      with_items: "{{ consul_srv_files }}"

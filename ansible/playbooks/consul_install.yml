@@ -5,3 +5,5 @@
   roles:
     - role: brianshumate.consul 
       consul_group_name: "tag_consul-instances"      
+      consul_enable_script_checks: true
+      consul_enable_local_script_checks: true

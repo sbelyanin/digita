@@ -6,11 +6,12 @@
     nomad_jobs_dir: "/srv/nomad/jobs"
     nomad_jobs_file:
 #      - "fabio.nomad"
-       - "nginx.nomad"
+#       - "nginx.nomad"
+       - "traefik.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:
-        src: "../files/{{ item }}"
+        src: "../files/nomad/{{ item }}"
         dest: "{{ nomad_jobs_dir }}"
       with_items: "{{ nomad_jobs_file }}"
 

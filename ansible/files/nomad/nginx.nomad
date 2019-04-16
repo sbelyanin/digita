@@ -28,7 +28,7 @@ job "nginx-job" {
       }
       service {
         name = "nginx"
-        tags = ["urlprefix-/"]
+        tags = ["urlprefix-/nginx strip=/nginx"]
         port = "lb"
         check {
           name     = "alive"

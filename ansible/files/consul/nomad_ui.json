@@ -1,0 +1,17 @@
+{
+  "service": {
+    "name": "nomad-ui",
+    "tags": ["urlprefix-/nomad strip=/nomad"],
+    "address": "10.132.15.194",
+    "port": 4646,
+    "check": [
+      {
+          "name": "alive",
+          "interval": "20s",
+          "http": "http://10.132.15.194:4646",
+          "timeout": "2s"
+      }
+    ]
+  }
+}
+
