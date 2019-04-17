@@ -7,8 +7,9 @@
     nomad_jobs_file:
 #      - "fabio.nomad"
 #       - "nginx.nomad"
-       - "traefik.nomad"
-       - "hashi-ui.nomad"
+#       - "traefik.nomad"
+#       - "hashi-ui.nomad"
+        - "gitlab.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:
