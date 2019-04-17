@@ -1,7 +1,13 @@
 {
   "service": {
     "name": "nomad-ui",
-    "tags": ["urlprefix-/nomad strip=/nomad"],
+
+    "tags": [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=http",
+          "traefik.frontend.rule=Host:nomad-ui"
+    ],
+
     "address": "10.132.15.194",
     "port": 4646,
     "check": [

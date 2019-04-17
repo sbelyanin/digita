@@ -11,6 +11,7 @@ job "gitlab-job" {
     }
     ephemeral_disk {
       size = 6000
+      sticky = true
     }
     task "gitlab-job" {
       driver = "docker"
@@ -23,9 +24,9 @@ job "gitlab-job" {
         }
         hostname = "gitlab"
         volumes = [
-          "/srv/gitlab/config:/etc/gitlab",
-          "/srv/gitlab/logs:/var/log/gitlab",
-          "/srv/gitlab/data:/var/opt/gitlab"
+          "local/gitlab/config:/etc/gitlab",
+          "local/gitlab/logs:/var/log/gitlab",
+          "local/gitlab/data:/var/opt/gitlab"
         ]
       }
       resources {
@@ -46,20 +47,19 @@ job "gitlab-job" {
       }
 
       service {
-        name = "gitlab-ui-prefix"
+        name = "gitlab"
         port = "http"
         tags = [
           "traefik.enable=true",
           "traefik.frontend.entryPoints=http",
-          "traefik.frontend.rule=Host:localhost",
-          "traefik.frontend.rule=PathPrefixStrip: /gitlab"
+          "traefik.frontend.rule=Host:gitlab" 
         ]
 
         check {
           name     = "alive"
           type     = "http"
           path     = "/"
-          interval = "10s"
+          interval = "120s"
           timeout  = "2s"
         }
       }

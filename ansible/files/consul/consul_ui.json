@@ -1,7 +1,13 @@
 {
   "service": {
     "name": "consul-ui",
-    "tags": ["urlprefix-/consul strip=/consul"],
+
+    "tags": [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=http",
+          "traefik.frontend.rule=Host:consul-ui"
+    ],
+
     "address": "127.0.0.1",
     "port": 8500,
     "check": [

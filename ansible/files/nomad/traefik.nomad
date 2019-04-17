@@ -1,6 +1,6 @@
 job "traefik" {
   datacenters = ["dc1"]
-  type = "service"
+  type = "system"
   group "traefik" {
     count = 1
     restart {
@@ -9,12 +9,6 @@ job "traefik" {
       delay = "25s"
       mode = "delay"
     }
-    ephemeral_disk {
-      sticky = true
-      migrate = true
-      size = 300
-    }
-
 
     task "traefik" {
 
@@ -24,9 +18,7 @@ job "traefik" {
         mode        = "file"
       }
 
-
       driver = "raw_exec"
-
       config {
         command = "local/traefik"          
 
@@ -42,8 +34,8 @@ job "traefik" {
       }
 
       resources {
-        cpu    = 300 # Mhz
-        memory = 100  # MB
+        cpu    = 150 # Mhz
+        memory = 200  # MB
 
         network {
 
