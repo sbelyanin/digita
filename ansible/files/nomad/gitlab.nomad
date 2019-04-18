@@ -47,7 +47,7 @@ job "gitlab-job" {
       }
 
       service {
-        name = "gitlab"
+        name = "gitlab-ui-http"
         port = "http"
         tags = [
           "traefik.enable=true",
@@ -63,6 +63,25 @@ job "gitlab-job" {
           timeout  = "2s"
         }
       }
+
+      service {
+        name = "gitlab-ui-https"
+        port = "http"
+        tags = [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=https",
+          "traefik.frontend.rule=Host:gitlab"
+        ]
+
+        check {
+          name     = "alive"
+          type     = "http"
+          path     = "/"
+          interval = "120s"
+          timeout  = "2s"
+        }
+      }
+
     }
   }
 }

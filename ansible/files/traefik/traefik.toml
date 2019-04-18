@@ -1,0 +1,32 @@
+defaultEntryPoints = ["https","http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+#    [entryPoints.http.redirect]
+#    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+    [entryPoints.https.tls.defaultCertificate]
+      certFile = "/srv/traefik/certs/traefik.crt"
+      keyFile = "/srv/traefik/certs/traefik.key"
+  [entryPoints.api]
+  address = ":8080"
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "docker.localhost"
+watch = true
+exposedbydefault = false
+
+[api]
+entrypoint = "api"
+
+[consul]
+endpoint = "127.0.0.1:8500"
+watch = true
+prefix = "traefik"
+
+[consulCatalog]
+endpoint = "127.0.0.1:8500"

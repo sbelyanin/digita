@@ -1,0 +1,25 @@
+---
+- name: Self signet cert install
+  hosts: tag_nomad-instances
+  become: true
+  vars:
+    self_signed_certs:
+      - key: "traefik.key"
+        cert: "traefik.crt"
+        dir: "/srv/traefik/certs"
+        csr: "/C=RU/ST=Moscow/L=Moscow/O=GS/OU=IT/CN=traefik" 
+  tasks:
+    - name: Create dir for cert
+      file:
+        path: "{{ item.dir }}"
+        state: directory
+        mode: 700
+      with_items: "{{ self_signed_certs }}"
+
+    - name: Create self signet cert
+      shell: | 
+        openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "{{ item.csr }}" -keyout "{{ item.key }}" -out "{{ item.cert }}"
+        chmod 600 "{{ item.key }}" "{{ item.cert }}"
+      args:
+        chdir: "{{ item.dir }}"
+      with_items: "{{ self_signed_certs }}"

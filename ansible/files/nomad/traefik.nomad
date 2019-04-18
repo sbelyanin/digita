@@ -23,12 +23,13 @@ job "traefik" {
         command = "local/traefik"          
 
         args = [
-          "--web",
-          "--consulcatalog",
-          "--consulcatalog.endpoint=127.0.0.1:8500",
-          "--consul=true",
-          "--entrypoints=Name:http Address::9080",
-          "--entrypoints=Name:https Address::9443",
+           "--configFile=/srv/traefik/traefik.toml"
+#          "--web",
+#          "--consulcatalog",
+#          "--consulcatalog.endpoint=127.0.0.1:8500",
+#          "--consul=true",
+#          "--entrypoints=Name:http Address::9080",
+#          "--entrypoints=Name:https Address::9443",
         ]
         
       }
