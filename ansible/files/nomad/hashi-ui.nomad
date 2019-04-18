@@ -33,27 +33,26 @@ job "hashi-ui" {
           "--nomad-enable",
           "--consul-enable",
           "--nomad-address",
-          "http://10.132.15.194:4646",
-          "--proxy-address",
-          "/hashi-ui"
+          "http://10.132.15.194:4646"
+#          "--proxy-address",
+#          "/hashi-ui"
         ]
         
       }
       
       service {
-        name = "nomad-ui-prefix"
+        name = "hashi-ui"
         port = "http"
         tags = [
           "traefik.enable=true",
-          "traefik.frontend.entryPoints=http",
-          "traefik.frontend.rule=Host:localhost",
-          "traefik.frontend.rule=PathPrefixStrip: /hashi-ui"
+          "traefik.frontend.entryPoints=https",
+          "traefik.frontend.rule=Host:hashi-ui"
         ]
       }
 
       resources {
         cpu    = 300 # Mhz
-        memory = 100  # MB
+        memory = 200  # MB
 
         network {
           port "http" {

@@ -4,7 +4,7 @@
 
     "tags": [
           "traefik.enable=true",
-          "traefik.frontend.entryPoints=http",
+          "traefik.frontend.entryPoints=https",
           "traefik.frontend.rule=Host:nomad-ui"
     ],
 

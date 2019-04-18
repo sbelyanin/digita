@@ -35,10 +35,10 @@ job "gitlab-job" {
         network {
           mbits = 10
           port "http" {
-            static = "1080"
+#            static = "1080"
            }
           port "https" {
-            static = "1443"
+#            static = "1443"
            }
           port "ssh" {
             static = "1022"
@@ -51,7 +51,7 @@ job "gitlab-job" {
         port = "http"
         tags = [
           "traefik.enable=true",
-          "traefik.frontend.entryPoints=http",
+          "traefik.frontend.entryPoints=http,https",
           "traefik.frontend.rule=Host:gitlab" 
         ]
 
@@ -64,23 +64,23 @@ job "gitlab-job" {
         }
       }
 
-      service {
-        name = "gitlab-ui-https"
-        port = "http"
-        tags = [
-          "traefik.enable=true",
-          "traefik.frontend.entryPoints=https",
-          "traefik.frontend.rule=Host:gitlab"
-        ]
+#      service {
+#        name = "gitlab-ui-https"
+#        port = "https"
+#        tags = [
+#          "traefik.enable=true",
+#          "traefik.frontend.entryPoints=https",
+#          "traefik.frontend.rule=Host:gitlab"
+#        ]
 
-        check {
-          name     = "alive"
-          type     = "http"
-          path     = "/"
-          interval = "120s"
-          timeout  = "2s"
-        }
-      }
+#        check {
+#          name     = "alive"
+#          type     = "http"
+#          path     = "/"
+#          interval = "120s"
+#          timeout  = "2s"
+#        }
+#      }
 
     }
   }
