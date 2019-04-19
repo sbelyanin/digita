@@ -7,3 +7,6 @@
       consul_group_name: "tag_consul-instances"      
       consul_enable_script_checks: true
       consul_enable_local_script_checks: true
+      consul_recursors: ['8.8.8.8', '8.8.4.4']
+      consul_client_address: "0.0.0.0" 
+      consul_dnsmasq_enable: yes

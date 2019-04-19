@@ -33,9 +33,7 @@ job "hashi-ui" {
           "--nomad-enable",
           "--consul-enable",
           "--nomad-address",
-          "http://10.132.15.194:4646"
-#          "--proxy-address",
-#          "/hashi-ui"
+          "http://nomad-servers.service.consul:4646"
         ]
         
       }

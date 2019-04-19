@@ -9,12 +9,16 @@ job "gitlab-job" {
       delay = "15s"
       mode = "fail"
     }
-    ephemeral_disk {
-      size = 6000
-      sticky = true
-    }
-    task "gitlab-job" {
+
+    task "gitlab" {
       driver = "docker"
+
+      affinity {
+        attribute = "${meta.gitlab}"
+        value     = "yes"
+        weight    = 100
+      }
+
       config {
         image = "gitlab/gitlab-ce:latest"
         port_map {
@@ -23,10 +27,15 @@ job "gitlab-job" {
           ssh = 22
         }
         hostname = "gitlab"
+        
+        dns_servers = [
+          "consul.service.lab.consul"
+        ]
+
         volumes = [
-          "local/gitlab/config:/etc/gitlab",
-          "local/gitlab/logs:/var/log/gitlab",
-          "local/gitlab/data:/var/opt/gitlab"
+          "/srv/gitlab/config:/etc/gitlab",
+          "/srv/gitlab/logs:/var/log/gitlab",
+          "/srv/gitlab/data:/var/opt/gitlab"
         ]
       }
       resources {
@@ -35,10 +44,8 @@ job "gitlab-job" {
         network {
           mbits = 10
           port "http" {
-#            static = "1080"
            }
           port "https" {
-#            static = "1443"
            }
           port "ssh" {
             static = "1022"
@@ -47,11 +54,11 @@ job "gitlab-job" {
       }
 
       service {
-        name = "gitlab-ui-http"
+        name = "gitlab-ui"
         port = "http"
         tags = [
           "traefik.enable=true",
-          "traefik.frontend.entryPoints=http,https",
+          "traefik.frontend.entryPoints=https",
           "traefik.frontend.rule=Host:gitlab" 
         ]
 
@@ -63,25 +70,6 @@ job "gitlab-job" {
           timeout  = "2s"
         }
       }
-
-#      service {
-#        name = "gitlab-ui-https"
-#        port = "https"
-#        tags = [
-#          "traefik.enable=true",
-#          "traefik.frontend.entryPoints=https",
-#          "traefik.frontend.rule=Host:gitlab"
-#        ]
-
-#        check {
-#          name     = "alive"
-#          type     = "http"
-#          path     = "/"
-#          interval = "120s"
-#          timeout  = "2s"
-#        }
-#      }
-
     }
   }
 }

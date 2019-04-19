@@ -8,12 +8,12 @@
           "traefik.frontend.rule=Host:consul-ui"
     ],
 
-    "address": "127.0.0.1",
+    "address": "consul.service.consul",
     "port": 8500,
     "check": [
       {
           "name": "alive",
-          "http": "http://127.0.0.1:8500",
+          "http": "http://consul.service.consul:8500",
           "interval": "20s",
           "timeout": "2s"
       }

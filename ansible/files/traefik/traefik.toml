@@ -24,9 +24,9 @@ exposedbydefault = false
 entrypoint = "api"
 
 [consul]
-endpoint = "127.0.0.1:8500"
+endpoint = "consul.service.consul:8500"
 watch = true
 prefix = "traefik"
 
 [consulCatalog]
-endpoint = "127.0.0.1:8500"
+endpoint = "consul.service.consul:8500"

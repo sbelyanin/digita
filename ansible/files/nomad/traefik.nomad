@@ -5,53 +5,55 @@ job "traefik" {
     count = 1
     restart {
       attempts = 5
-      interval = "5m"
-      delay = "25s"
+      interval = "10m"
+      delay = "30s"
       mode = "delay"
     }
 
     task "traefik" {
-
       artifact {
         source      = "https://github.com/containous/traefik/releases/download/v1.7.10/traefik_linux-amd64"
         destination = "local/traefik"
         mode        = "file"
       }
-
       driver = "raw_exec"
       config {
         command = "local/traefik"          
-
-        args = [
-           "--configFile=/srv/traefik/traefik.toml"
-#          "--web",
-#          "--consulcatalog",
-#          "--consulcatalog.endpoint=127.0.0.1:8500",
-#          "--consul=true",
-#          "--entrypoints=Name:http Address::9080",
-#          "--entrypoints=Name:https Address::9443",
-        ]
-        
+        args = [ "--configFile=/srv/traefik/traefik.toml" ]
       }
-
       resources {
-        cpu    = 150 # Mhz
-        memory = 200  # MB
+        cpu    = 200 # Mhz
+        memory = 300  # MB
 
         network {
-
           port "http" {
-            static = "9080"
+            static = "80"
           }
-
           port "https" {
-            static = "9443"
+            static = "443"
           }
-
           port "admin" {
             static = "8080"
           }
 
+        }
+      }
+
+      service {
+        name = "traefik-ui"
+        port = "admin"
+        tags = [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=https",
+          "traefik.frontend.rule=Host:traefik-ui"
+        ]
+
+        check {
+          name     = "alive"
+          type     = "http"
+          path     = "/"
+          interval = "120s"
+          timeout  = "2s"
         }
       }
     }
