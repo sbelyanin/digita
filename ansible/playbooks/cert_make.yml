@@ -1,0 +1,31 @@
+---
+- name: Self signet cert install
+  hosts: localhost
+  vars:
+    self_signed_certs:
+      - key: "traefik.key"
+        cert: "traefik.crt"
+        dir: "../files/certs"
+        subj: "/C=RU/ST=Moscow/L=Moscow/O=GS/OU=IT/CN=traefik"
+        csr: "traefik.csr"
+      - key: "registry.key"
+        cert: "registry.crt"
+        dir: "../files/certs"
+        subj: "/C=RU/ST=Moscow/L=Moscow/O=GS/OU=IT/CN=registry.service.consul"
+        csr: "registry.csr"
+  tasks:
+    - name: Create self signet cert
+      shell: | 
+        [ -f CA.key hosts ] && echo "CA.key already exist" || openssl genrsa -out CA.key 2048        
+        [ -f CA.crt hosts ] && echo "CA.crt already exist" || openssl req -x509 -new -nodes -subj '/C=RU/ST=Moscow/L=Moscow/O=GS/OU=IT/CN=CA' -key CA.key -days 10000 -out CA.crt
+
+        openssl genrsa -out "{{ item.key }}" 2048
+        openssl req -new -key "{{ item.key }}" -subj "{{ item.subj }}" -out "{{ item.csr }}"
+        openssl x509 -req -in "{{ item.csr }}" -CA CA.crt -CAkey CA.key -CAcreateserial -out "{{ item.cert }}" -days 10000
+
+        sudo cp -f CA.crt /usr/local/share/ca-certificates/
+        sudo update-ca-certificates
+
+      args:
+        chdir: "{{ item.dir }}"
+      with_items: "{{ self_signed_certs }}"

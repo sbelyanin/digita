@@ -1,7 +1,7 @@
-job "hashi-ui" {
+job "hashi-ui-job" {
   datacenters = ["dc1"]
-  type = "service"
-  group "hashi" {
+  type = "system"
+  group "hashi-group" {
     count = 1
     restart {
       attempts = 5

@@ -11,6 +11,7 @@
        - "hashi-ui.nomad"
        - "gitlab.nomad"
        - "mongodb.nomad"
+       - "registry.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:
@@ -20,9 +21,7 @@
 
     - name: Run jobs into nomad cluster
       run_once: true
-      shell: |
-        export NOMAD_ADDR="http://nomad-clients.service.consul:4646"
-        nomad run "{{ item }}"
+      shell: "nomad run {{ item }}" 
       args:
         chdir: "{{ nomad_jobs_dir }}"
       with_items: "{{ nomad_jobs_file }}" 

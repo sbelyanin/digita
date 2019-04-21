@@ -29,7 +29,7 @@ job "gitlab-job" {
         hostname = "gitlab"
         
         dns_servers = [
-          "consul.service.lab.consul"
+          "172.17.0.1", "8.8.8.8", "8.8.4.4"
         ]
 
         volumes = [

@@ -12,13 +12,15 @@ job "nginx-job" {
     ephemeral_disk {
       size = 300
     }
-    task "nginx-job" {
+    task "nginx" {
       driver = "docker"
       config {
         image = "nginx:latest"
         port_map {
           lb = 80
         }
+      dns_search_domains = ["service.consul"]
+       dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
       }
       resources {
         network {
@@ -28,7 +30,6 @@ job "nginx-job" {
       }
       service {
         name = "nginx"
-        tags = ["urlprefix-/nginx strip=/nginx"]
         port = "lb"
         check {
           name     = "alive"

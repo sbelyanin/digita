@@ -8,9 +8,9 @@ defaultEntryPoints = ["https","http"]
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
-    [entryPoints.https.tls.defaultCertificate]
-      certFile = "/srv/traefik/certs/traefik.crt"
-      keyFile = "/srv/traefik/certs/traefik.key"
+      [entryPoints.https.tls.defaultCertificate]
+        certFile = "/srv/certs/traefik.crt"
+        keyFile = "/srv/certs/traefik.key"
   [entryPoints.api]
   address = ":8080"
 
