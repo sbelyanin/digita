@@ -1,0 +1,17 @@
+---
+- name: Copy utils scripts 
+  hosts: tag_nomad-instances 
+  become: true
+  vars:
+    scr_files:
+      - file: "gl_token2consul.sh"
+        dir: "/usr/local/bin"        
+  tasks:
+    - name: Copy scripts file into node
+      copy:
+        src: "../files/scripts/{{ item.file }}"
+        dest: "{{ item.dir }}"
+        owner: root
+        group: root
+        mode: 0775
+      with_items: "{{ scr_files }}"

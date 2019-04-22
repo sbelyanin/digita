@@ -10,15 +10,14 @@ job "gitlab-job" {
       mode = "fail"
     }
 
+    affinity {
+      attribute = "${meta.gitlab}"
+      value     = "yes"
+      weight    = 100
+    }
+
     task "gitlab" {
       driver = "docker"
-
-      affinity {
-        attribute = "${meta.gitlab}"
-        value     = "yes"
-        weight    = 100
-      }
-
       config {
         image = "gitlab/gitlab-ce:latest"
         port_map {
@@ -54,7 +53,7 @@ job "gitlab-job" {
       }
 
       service {
-        name = "gitlab-ui"
+        name = "gitlab"
         port = "http"
         tags = [
           "traefik.enable=true",
@@ -70,6 +69,25 @@ job "gitlab-job" {
           timeout  = "2s"
         }
       }
+
+      service {
+        name = "gitlab-reg"
+        port = "http"
+        tags = [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=http",
+          "traefik.frontend.rule=Host:gitlab-reg"
+        ]
+
+        check {
+          name     = "alive"
+          type     = "http"
+          path     = "/"
+          interval = "120s"
+          timeout  = "2s"
+        }
+      }
+
     }
   }
 }

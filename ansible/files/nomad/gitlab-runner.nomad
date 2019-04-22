@@ -21,25 +21,30 @@ job "runner-job" {
         volumes = [
           "/var/run/docker.sock:/var/run/docker.sock"
          ]
-
       }
       env {
-        "REGISTRY_HTTP_TLS_CERTIFICATE" = "/certs/registry.crt",
-        "REGISTRY_HTTP_TLS_KEY" = "/certs/registry.key"
       }
+
+      template {
+        data = <<EOH
+        #!/bin/bash
+        {{ if keyExists "gitlab/runner_token" }}
+        gitlab-runner register --non-interactive --registration-token {{ key "gitlab/runner_token" }} \
+        --executor "docker" --docker-image alpine:3 --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+        --docker-privileged --url "http://gitlab-reg/" --description "docker-runner" --run-untagged --locked "false"
+        exec /entrypoint "$@"
+        {{ else }}
+        exec /entrypoint "$@"
+        {{ end }}
+        EOH
+        destination = "local/entrypoint.sh"
+      }
+
+
 
       resources {
         network {
           mbits = 10
-        }
-      }
-      service {
-        name = "registry"
-        port = "reg_port"
-        check {
-          type     = "tcp"
-          interval = "20s"
-          timeout  = "2s"
         }
       }
     }
