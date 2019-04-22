@@ -57,26 +57,8 @@ job "gitlab-job" {
         port = "http"
         tags = [
           "traefik.enable=true",
-          "traefik.frontend.entryPoints=https",
-          "traefik.frontend.rule=Host:gitlab" 
-        ]
-
-        check {
-          name     = "alive"
-          type     = "http"
-          path     = "/"
-          interval = "120s"
-          timeout  = "2s"
-        }
-      }
-
-      service {
-        name = "gitlab-reg"
-        port = "http"
-        tags = [
-          "traefik.enable=true",
           "traefik.frontend.entryPoints=http",
-          "traefik.frontend.rule=Host:gitlab-reg"
+          "traefik.frontend.rule=Host:gitlab" 
         ]
 
         check {

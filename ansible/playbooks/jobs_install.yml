@@ -13,7 +13,7 @@
 #       - "mongodb.nomad"
 #       - "registry.nomad"
 #       - "gitlab-token.nomad"
-        - "gitlab-runner.nomad"
+       - "gitlab-runner.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:
