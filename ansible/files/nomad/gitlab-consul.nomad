@@ -14,7 +14,7 @@ job "gl-token" {
       driver = "raw_exec"
       config {
         command = "/bin/bash"
-        args = ["/usr/local/bin/gl_token2consul.sh"]
+        args = ["/usr/local/bin/gl_cred2consul.sh"]
       }
       resources {
         cpu    = 100 # Mhz

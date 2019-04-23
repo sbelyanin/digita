@@ -4,7 +4,7 @@
   become: true
   vars:
     scr_files:
-      - file: "gl_token2consul.sh"
+      - file: "gl_cred2consul.sh"
         dir: "/usr/local/bin"        
   tasks:
     - name: Copy scripts file into node

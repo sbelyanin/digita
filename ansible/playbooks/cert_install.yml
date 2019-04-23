@@ -11,11 +11,14 @@
       - key: "registry.key"
         cert: "registry.crt"
         dir: "/srv/certs"
+
     self_signet_CA:
       - cert: "CA.crt"
         dir: "/usr/local/share/ca-certificates/"
       - cert: "CA.crt"
         dir: "/etc/docker/certs.d/"
+      - cert: "CA.crt"
+        dir: "/srv/certs/"
   tasks:
     - name: Create dirs for certs and key
       file:
