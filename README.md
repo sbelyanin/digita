@@ -1,10 +1,10 @@
 # DIGITA - make CI/CD easy
 
-## Intoduce
+## Introduce
 
 ### For first release
 
- - Install Nomad cluster whith Consul and Vault integration.
+ - Install Nomad cluster whith Consul integration.
  - Install custom GitLab CI/CD
  - Assign dev, stage and prod environment
 
