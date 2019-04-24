@@ -20,8 +20,5 @@ build:
   stage: build
   image: docker:git
   script:
-    - "docker build -t registry.service.consul:5000/crawler_app:0.1 ."
-    - "cat /etc/resolv.conf"
-    - "ping -c 2 registry"
-    - "cat /etc/issue"
-    - "docker push registry.service.consul:5000/crawler_app:0.1"
+    - "docker build -t registry.service.consul:5000/crawler_app:master ."
+    - "docker push registry.service.consul:5000/crawler_app:master"

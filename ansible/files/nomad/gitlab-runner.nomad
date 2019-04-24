@@ -48,9 +48,6 @@ job "runner-job" {
         EOH
         destination = "local/entrypoint.sh"
       }
-
-
-
       resources {
         network {
           mbits = 10

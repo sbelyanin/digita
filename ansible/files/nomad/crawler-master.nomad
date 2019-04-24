@@ -9,62 +9,79 @@ job "crawler-master-job" {
       delay = "25s"
       mode = "delay"
     }
-    ephemeral_disk {
-      size = 500
-      sticky = true
-      
-    }
-
-    task "crawler-master-app" {
+    task "crawler-app-master" {
       driver = "docker"
       config {
-        image = "mongo:4.1"
+        image = "registry.service.consul:5000/crawler_app:master"
         port_map {
-          db = 27017
+          prom_metr = 8000
         }
-        hostname = "mongodb"
         dns_search_domains = ["service.consul"]
         dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
-        volumes = [
-          "local/mongodb/data:/data"
-        ]
       }
+      template {
+        data = <<-EOF
+               MONGO="{{range service "mongodb"}}{{.Address}}{{end}}"
+               MONGO_PORT="{{range service "mongodb"}}{{.Port}}{{end}}"
+               RMQ_HOST="{{range service "rabbitmq"}}{{.Address}}{{end}}"
+               EOF
 
-
-
-
-
-    }
-    task "crawler-master-ui" {
-    }
-    task "crawler-master-rabbitmq" {
-    }
-    task "crawler-master-mongodb" {
-      driver = "docker"
-      config {
-        image = "mongo:4.1"
-        port_map {
-          db = 27017
-        }
-        hostname = "mongodb"
-        dns_search_domains = ["service.consul"]
-        dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
-        volumes = [
-          "local/mongodb/data:/data"
-        ]
+        destination = "secrets/file.env"
+        env         = true
       }
       resources {
         cpu    = "500"
-        memory = "500"
+        memory = "200"
         network {
           mbits = 10
-          port "db" {}
+          port "prom_metr" {}
+        }
+      }  
+      service {
+        name = "crawler-app-master"
+        port = "prom_metr"
+        check {
+          type     = "tcp"
+          interval = "20s"
+          timeout  = "2s"
         }
       }
+    }
+    task "crawler-ui-master" {
+      driver = "docker"
+      config {
+        image = "registry.service.consul:5000/crawler_ui:master"
+        port_map {
+          web = 8000
+        }
+        dns_search_domains = ["service.consul"]
+        dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
+      }
+      template {
+        data = <<-EOF
+               MONGO="{{range service "mongodb"}}{{.Address}}{{end}}"
+               MONGO_PORT="{{range service "mongodb"}}{{.Port}}{{end}}"
+               EOF
 
+        destination = "secrets/file.env"
+        env         = true
+      }
+      resources {
+        cpu    = "500"
+        memory = "200"
+        network {
+          mbits = 1
+          port "web" {}
+        }
+      }
       service {
-        name = "mongodb"
-        port = "db"
+        name = "crawler-ui-master"
+        port = "web"
+        tags = [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=https",
+          "traefik.frontend.rule=Host:crawler-master"
+        ]
         check {
           type     = "tcp"
           interval = "20s"
@@ -74,4 +91,3 @@ job "crawler-master-job" {
     }
   }
 }
-
