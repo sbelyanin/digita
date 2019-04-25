@@ -1,0 +1,95 @@
+---
+# Host for Gitlab install Playbook
+- name: DIGITA Instance
+  hosts: localhost
+  vars:
+    service_account_email: "87352832204-compute@developer.gserviceaccount.com"
+    credentials_file: "~/gcp/infra.json"
+    project_id: "docker-9"
+    provisioner_user: "ansible"
+    provisioner_key: "~/.ssh/ansible.pub"
+    cluster_node:
+      - name: "cluster-node-01"
+        consul_node_role: "bootstrap"
+        nomad_node_role: "both"
+        service_node: true
+        gitlab: true
+        prometheus: false
+        registry: true
+        efk: false
+    cluster_node:
+      - name: "cluster-node-02"
+        consul_node_role: "server"
+        nomad_node_role: "both"
+        service_node: true
+        gitlab: false
+        prometheus: true
+        registry: false
+        efk: false
+    cluster_node:
+      - name: "cluster-node-03"
+        consul_node_role: "server"
+        nomad_node_role: "both"
+        service_node: true
+        gitlab: false
+        prometheus: false
+        registry: false
+        efk: true
+
+  tasks:
+    - name: Create Firewall Rule for http/s access
+      gce_net:
+        name: default
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        fwname: "cluster-firewall-rule"
+        allowed: tcp:80;tcp:443;tcp:1022
+        state: "present"
+        target_tags: "cluster-node"
+        src_range: ['0.0.0.0/0']
+
+    - name: create a disk for node
+      gce_pd:
+         name: 'disk-node'
+         disk_type: pd-standard
+         size_gb: 50
+         image_family: ubuntu-1604-lts
+         service_account_email: "{{ service_account_email }}"
+         credentials_file: "{{ credentials_file }}"
+         project_id: "{{ project_id }}"
+         zone: europe-west1-b
+         state: present
+      register: disk
+
+    - name: Get the default SSH key
+      command: cat "{{ provisioner_key }}"
+      register: ssh_key
+
+    - name: create nomad cluster node instances
+      gce:
+        instance_names: "{{ item.name }}"
+        zone: europe-west1-b 
+        machine_type: n1-standard-1
+        state: present
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        disk_size: 30
+        metadata : '{ 
+             "startup-script" : "apt-get update",
+             "sshKeys": "{{ provisioner_user }}:{{ ssh_key.stdout }}",
+             "service_node": "{{ item.service_node }}",
+             "gitlab": "{{ item.gitlab }}",
+             "prometheus": "{{ item.prometheus }}",
+             "registry": "{{ item.registry }}",
+             "efk": "{{ item.efk }}",
+             "consul_node_role" : "{{ item.consul_node_role }}",
+             "nomad_node_role" : "{{item.nomad_node_role}}"
+          }'
+        tags:
+          - cluster-node
+          - consul-instances
+          - nomad-instances
+      register: gce
+      with_items: "{{ cluster_node }}"
