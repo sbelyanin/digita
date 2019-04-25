@@ -32,9 +32,7 @@ job "rabbitmq-job" {
         network {
           mbits = 10
           port "web" {}
-          port "amqp" {
-            static = 5672
-          } 
+          port "amqp" {} 
         }
       }
 

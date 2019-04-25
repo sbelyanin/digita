@@ -21,11 +21,15 @@ ENV MONGO_PORT 27017
 #порт для подключения к `mongodb`-хосту
 ENV RMQ_HOST rabbitmq
 #адрес `rabbitmq`-хоста
-ENV RMQ_QUEUE queue
+ENV RMQ_PORT 5672
+#номер порта для подключения
+ENV RMQ_VHOST /
+#виртуальный хост в rabbitmq
+ENV RMQ_QUEUE urls
 #имя очереди `rabbitmq`
-ENV RMQ_USERNAME rabbitmq
+ENV RMQ_USERNAME guest
 #пользователь для подключения к `rabbitmq`-серверу
-ENV RMQ_PASSWORD rabbitmq
+ENV RMQ_PASSWORD guest
 #пароль пользователя
 ENV CHECK_INTERVAL 60
 #минимальное время между повторными проверками одного и того же `url`

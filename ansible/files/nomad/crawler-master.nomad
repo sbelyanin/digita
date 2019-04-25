@@ -24,6 +24,7 @@ job "crawler-master-job" {
                MONGO="{{range service "mongodb"}}{{.Address}}{{end}}"
                MONGO_PORT="{{range service "mongodb"}}{{.Port}}{{end}}"
                RMQ_HOST="{{range service "rabbitmq"}}{{.Address}}{{end}}"
+               RMQ_PORT="{{range service "rabbitmq"}}{{.Address}}{{end}}"
                EOF
 
         destination = "secrets/file.env"
