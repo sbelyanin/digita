@@ -6,10 +6,14 @@
     service_account_email: "87352832204-compute@developer.gserviceaccount.com"
     credentials_file: "~/gcp/infra.json"
     project_id: "docker-9"
+    cluster_zone: "europe-west1-b"
     provisioner_user: "ansible"
     provisioner_key: "~/.ssh/ansible.pub"
+    image_family: "ubuntu-1604-lts"    
     cluster_node:
       - name: "cluster-node-01"
+        disk_size: 30
+        machine_type: "n1-standard-1"
         consul_node_role: "bootstrap"
         nomad_node_role: "both"
         service_node: true
@@ -17,8 +21,9 @@
         prometheus: false
         registry: true
         efk: false
-    cluster_node:
       - name: "cluster-node-02"
+        disk_size: 30
+        machine_type: "n1-standard-1"
         consul_node_role: "server"
         nomad_node_role: "both"
         service_node: true
@@ -26,8 +31,9 @@
         prometheus: true
         registry: false
         efk: false
-    cluster_node:
       - name: "cluster-node-03"
+        disk_size: 30
+        machine_type: "n1-standard-1"
         consul_node_role: "server"
         nomad_node_role: "both"
         service_node: true
@@ -51,16 +57,17 @@
 
     - name: create a disk for node
       gce_pd:
-         name: 'disk-node'
+         name: "disk-{{ item.name }}"
          disk_type: pd-standard
-         size_gb: 50
-         image_family: ubuntu-1604-lts
+         size_gb: "{{ item.disk_size }}"
+         image_family: "{{ image_family }}"
          service_account_email: "{{ service_account_email }}"
          credentials_file: "{{ credentials_file }}"
          project_id: "{{ project_id }}"
-         zone: europe-west1-b
+         zone: "{{ cluster_zone }}"
          state: present
       register: disk
+      with_items: "{{ cluster_node }}"
 
     - name: Get the default SSH key
       command: cat "{{ provisioner_key }}"
@@ -69,13 +76,15 @@
     - name: create nomad cluster node instances
       gce:
         instance_names: "{{ item.name }}"
-        zone: europe-west1-b 
-        machine_type: n1-standard-1
+        zone: "{{ cluster_zone }}"
+        machine_type: "{{ item.machine_type }}"
         state: present
         service_account_email: "{{ service_account_email }}"
         credentials_file: "{{ credentials_file }}"
         project_id: "{{ project_id }}"
-        disk_size: 30
+        disks:
+           - name: "disk-{{ item.name }}"
+             mode: READ_WRITE
         metadata : '{ 
              "startup-script" : "apt-get update",
              "sshKeys": "{{ provisioner_user }}:{{ ssh_key.stdout }}",
