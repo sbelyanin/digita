@@ -1,6 +1,6 @@
 ---
 - name: Display all variables/facts known for a host
-  hosts: digita-cnode
+  hosts: cluster-node-01
   tasks:
     - debug:
          var: hostvars[inventory_hostname]

@@ -1,6 +1,10 @@
 job "registry-job" {
   datacenters = ["dc1"]
   type = "service"
+  constraint {
+    attribute = "${attr.platform.gce.attr.registry}"
+    value     = "True"
+  }
   group "registry-group" {
     count = 1
     restart {

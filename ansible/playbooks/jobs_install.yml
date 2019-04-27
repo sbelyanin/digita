@@ -15,7 +15,8 @@
 #       - "gitlab-consul.nomad"
 #       - "gitlab-runner.nomad"
 #       - "rabbitmq.nomad"
-        - "crawler-master.nomad" 
+#       - "crawler-master.nomad" 
+        - "test.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:

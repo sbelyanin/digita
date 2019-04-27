@@ -1,13 +1,47 @@
 ---
-# Host for Gitlab install Playbook
+# Install node in GCP for Nomad cluster
 - name: DIGITA Instance
   hosts: localhost
   vars:
     service_account_email: "87352832204-compute@developer.gserviceaccount.com"
     credentials_file: "~/gcp/infra.json"
     project_id: "docker-9"
+    cluster_zone: "europe-west1-b"
     provisioner_user: "ansible"
     provisioner_key: "~/.ssh/ansible.pub"
+    image_family: "ubuntu-1604-lts"    
+    cluster_node:
+      - name: "cluster-node-01"
+        disk_size: 30
+        machine_type: "n1-standard-1"
+        consul_node_role: "bootstrap"
+        nomad_node_role: "both"
+        service_node: true
+        gitlab: true
+        prometheus: false
+        registry: true
+        efk: false
+      - name: "cluster-node-02"
+        disk_size: 30
+        machine_type: "n1-standard-1"
+        consul_node_role: "server"
+        nomad_node_role: "both"
+        service_node: true
+        gitlab: false
+        prometheus: true
+        registry: false
+        efk: false
+      - name: "cluster-node-03"
+        disk_size: 30
+        machine_type: "n1-standard-1"
+        consul_node_role: "server"
+        nomad_node_role: "both"
+        service_node: true
+        gitlab: false
+        prometheus: false
+        registry: false
+        efk: true
+
   tasks:
     - name: Create Firewall Rule for http/s access
       gce_net:
@@ -15,119 +49,56 @@
         service_account_email: "{{ service_account_email }}"
         credentials_file: "{{ credentials_file }}"
         project_id: "{{ project_id }}"
-        fwname: "digita-firewall-rule"
-        allowed: tcp:80;tcp:443;tcp:9999
+        fwname: "cluster-firewall-rule"
+        allowed: tcp:80;tcp:443;tcp:1022
         state: "present"
-        target_tags: "digita-host"
+        target_tags: "cluster-node"
         src_range: ['0.0.0.0/0']
 
-    - name: create a disk for cnode
+    - name: create a disk for node
       gce_pd:
-         name: 'disk-cnode'
+         name: "disk-{{ item.name }}"
          disk_type: pd-standard
-         size_gb: 30
-         image_family: ubuntu-1604-lts
+         size_gb: "{{ item.disk_size }}"
+         image_family: "{{ image_family }}"
          service_account_email: "{{ service_account_email }}"
          credentials_file: "{{ credentials_file }}"
          project_id: "{{ project_id }}"
-         zone: europe-west1-b
+         zone: "{{ cluster_zone }}"
          state: present
       register: disk
-
-    - name: create a disk for wnode
-      gce_pd:
-         name: 'disk-wnode'
-         disk_type: pd-standard
-         size_gb: 50 
-         image_family: ubuntu-1604-lts
-         service_account_email: "{{ service_account_email }}"
-         credentials_file: "{{ credentials_file }}"
-         project_id: "{{ project_id }}"
-         zone: europe-west1-b
-         state: present  
-      register: disk
+      with_items: "{{ cluster_node }}"
 
     - name: Get the default SSH key
       command: cat "{{ provisioner_key }}"
       register: ssh_key
 
-    - name: create control node instances
+    - name: create nomad cluster node instances
       gce:
-        instance_names: digita-cnode
-        zone: europe-west1-b 
-        machine_type: n1-standard-1
+        instance_names: "{{ item.name }}"
+        zone: "{{ cluster_zone }}"
+        machine_type: "{{ item.machine_type }}"
         state: present
         service_account_email: "{{ service_account_email }}"
         credentials_file: "{{ credentials_file }}"
         project_id: "{{ project_id }}"
         disks:
-           - name: disk-cnode
+           - name: "disk-{{ item.name }}"
              mode: READ_WRITE
         metadata : '{ 
              "startup-script" : "apt-get update",
-             "consul_node_role" : "client",
-             "nomad_node_role" : "server",
-             "sshKeys":"{{ provisioner_user }}:{{ ssh_key.stdout }}" 
+             "sshKeys": "{{ provisioner_user }}:{{ ssh_key.stdout }}",
+             "service_node": "{{ item.service_node }}",
+             "gitlab": "{{ item.gitlab }}",
+             "prometheus": "{{ item.prometheus }}",
+             "registry": "{{ item.registry }}",
+             "efk": "{{ item.efk }}",
+             "consul_node_role" : "{{ item.consul_node_role }}",
+             "nomad_node_role" : "{{item.nomad_node_role}}"
           }'
-        tags: 
-          - digita-host
-          - chode
+        tags:
+          - cluster-node
           - consul-instances
           - nomad-instances
       register: gce
-
-    - name: Save host data
-      add_host:
-        hostname: "{{ item.public_ip }}"
-        groupname: gce_instances_ips
-      with_items: "{{ gce.instance_data }}"
-
-    - name: Wait for SSH for instances
-      wait_for:
-        delay: 1
-        host: "{{ item.public_ip }}"
-        port: 22
-        state: started
-        timeout: 30
-      with_items: "{{ gce.instance_data }}"
-
-    - name: create worker node instances
-      gce:
-        instance_names: digita-wnode
-        zone: europe-west1-b
-        machine_type: n1-standard-2
-        state: present
-        service_account_email: "{{ service_account_email }}"
-        credentials_file: "{{ credentials_file }}"
-        project_id: "{{ project_id }}"
-        disks:
-           - name: disk-wnode
-             mode: READ_WRITE
-        metadata : '{
-             "startup-script" : "apt-get update",
-             "consul_node_role" : "bootstrap",
-             "nomad_node_role" : "both",
-             "sshKeys":"{{ provisioner_user }}:{{ ssh_key.stdout }}"
-          }'
-        tags: 
-         - digita-host
-         - wnode
-         - consul-instances
-         - nomad-instances
-      register: gce
-
-    - name: Save host data
-      add_host:
-        hostname: "{{ item.public_ip }}"
-        groupname: gce_instances_ips
-      with_items: "{{ gce.instance_data }}"
-
-    - name: Wait for SSH for instances
-      wait_for:
-        delay: 1
-        host: "{{ item.public_ip }}"
-        port: 22
-        state: started
-        timeout: 30
-      with_items: "{{ gce.instance_data }}"
-
+      with_items: "{{ cluster_node }}"

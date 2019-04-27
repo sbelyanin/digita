@@ -1,6 +1,12 @@
 job "nginx-job" {
   datacenters = ["dc1"]
   type = "service"
+
+#  constraint {
+#    attribute = "${attr.platform.gce.attr.prometheus}"
+#    value     = "True"
+#  }
+
   group "nginx-group" {
     count = 1
     restart {
@@ -20,7 +26,7 @@ job "nginx-job" {
           lb = 80
         }
       dns_search_domains = ["service.consul"]
-       dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
+      dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
       }
       resources {
         network {
@@ -31,6 +37,11 @@ job "nginx-job" {
       service {
         name = "nginx"
         port = "lb"
+        tags = [
+          "traefik.enable=true",
+          "traefik.frontend.entryPoints=https",
+          "traefik.frontend.rule=Host:nginx"
+        ]
         check {
           name     = "alive"
           type     = "http"

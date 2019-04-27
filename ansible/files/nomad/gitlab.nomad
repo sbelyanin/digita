@@ -1,6 +1,10 @@
 job "gitlab-job" {
   datacenters = ["dc1"]
   type = "service"
+  constraint {
+    attribute = "${attr.platform.gce.attr.gitlab}"
+    value     = "True"
+  }
   group "gitlab-group" {
     count = 1
     restart {
@@ -8,12 +12,6 @@ job "gitlab-job" {
       interval = "30m"
       delay = "15s"
       mode = "fail"
-    }
-
-    affinity {
-      attribute = "${meta.gitlab}"
-      value     = "yes"
-      weight    = 100
     }
 
     task "gitlab" {
@@ -39,7 +37,7 @@ job "gitlab-job" {
       }
       resources {
         cpu    = "1000"
-        memory = "4000"
+        memory = "2000"
         network {
           mbits = 10
           port "http" {
