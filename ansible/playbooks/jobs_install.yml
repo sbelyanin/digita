@@ -5,18 +5,17 @@
   vars:
     nomad_jobs_dir: "/srv/nomad/jobs"
     nomad_jobs_file:
-#       - "fabio.nomad"
 #       - "nginx.nomad"
 #       - "traefik.nomad"
 #       - "hashi-ui.nomad"
 #       - "gitlab.nomad"
 #       - "mongodb.nomad"
 #       - "registry.nomad"
-#       - "gitlab-consul.nomad"
-#       - "gitlab-runner.nomad"
+       - "gitlab-consul.nomad"
+       - "gitlab-runner.nomad"
 #       - "rabbitmq.nomad"
 #       - "crawler-master.nomad" 
-        - "test.nomad"
+
   tasks:
     - name: Copy jobs config files into node
       copy:

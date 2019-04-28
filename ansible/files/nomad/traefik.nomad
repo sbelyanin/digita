@@ -17,9 +17,48 @@ job "traefik" {
         mode        = "file"
       }
       driver = "raw_exec"
+      template {
+        data = <<EOH
+defaultEntryPoints = ["https","http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+#    [entryPoints.http.redirect]
+#     entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [entryPoints.https.tls.defaultCertificate]
+        certFile = "/srv/certs/traefik.crt"
+        keyFile = "/srv/certs/traefik.key"
+  [entryPoints.api]
+  address = ":8080"
+
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "docker.localhost"
+watch = true
+exposedbydefault = false
+
+[api]
+entrypoint = "api"
+
+[consul]
+endpoint = "consul.service.consul:8500"
+watch = true
+prefix = "traefik"
+
+[consulCatalog]
+endpoint = "consul.service.consul:8500"
+        EOH
+        destination = "local/traefik.toml"
+      }
+
       config {
         command = "local/traefik"          
-        args = [ "--configFile=/srv/traefik/traefik.toml" ]
+        args = [ "--configFile=local/traefik.toml" ]
       }
       resources {
         cpu    = 200 # Mhz

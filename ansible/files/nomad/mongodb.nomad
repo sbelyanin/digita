@@ -22,7 +22,7 @@ job "mongodb-job" {
           db = 27017
         }
         hostname = "mongodb"
-#        dns_search_domains = ["service.consul"]
+        dns_search_domains = ["service.consul"]
         dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
         volumes = [
           "local/mongodb/data:/data"
