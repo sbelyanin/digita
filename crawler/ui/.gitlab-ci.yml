@@ -16,9 +16,33 @@ test:
     - "coverage run -m unittest discover -s tests/"
     - "coverage report --include ui/ui.py"
 
-build:
+build-master:
   stage: build
   image: docker:git
   script:
     - "docker build -t registry.service.consul:5000/crawler_ui:master ."
     - "docker push registry.service.consul:5000/crawler_ui:master"
+  only:
+    - master
+
+run-review-master:
+  stage: review
+  script:
+    - "apk add -U curl tar gzip bash ca-certificates git"
+    - "curl --request POST --data @deploy/ui-master.json http://nomad-servers.service.consul:4646/v1/jobs"
+  only:
+    - master
+  when: manual
+
+rerun-mongodb-master:
+  stage: review
+  script:
+    - "apk add -U curl jq tar gzip bash ca-certificates git"
+    - "curl http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job | jq '.TaskGroups[0].Count = 0 | {\"Job\": .}' | curl -X POST -d @- http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job"
+    - "sleep 5"
+    - "curl http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job | jq '.TaskGroups[0].Count = 1 | {\"Job\": .}' | curl -X POST -d @- http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job"
+  only:
+    - master
+  when: manual
+
+

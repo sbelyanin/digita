@@ -1,11 +1,7 @@
-job "mongodb-job" {
+job "mongodb-branch-job" {
   datacenters = ["dc1"]
   type = "service"
-  constraint {
-    attribute = "${attr.platform.gce.attr.mongodb}"
-    value     = "True"
-  }
-  group "mongodb-group" {
+  group "mongodb-branch-group" {
     count = 1
     restart {
       attempts = 10
@@ -13,22 +9,27 @@ job "mongodb-job" {
       delay = "25s"
       mode = "delay"
     }
-    task "mongodb-task" {
+    ephemeral_disk {
+      size = 500
+      sticky = true
+      
+    }
+    task "mongodb-branch-task" {
       driver = "docker"
       config {
         image = "mongo:4.1"
         port_map {
           db = 27017
         }
-        hostname = "mongodb"
+        hostname = "mongodb-branch"
         dns_search_domains = ["service.consul"]
         dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
         volumes = [
-          "/srv/mongodb/data:/data"
+          "local/mongodb-branch/data:/data"
         ]
       }
       resources {
-        cpu    = "500"
+        cpu    = "300"
         memory = "300"
         network {
           mbits = 10
@@ -37,7 +38,7 @@ job "mongodb-job" {
       }
 
       service {
-        name = "mongodb"
+        name = "mongodb-branch"
         port = "db"
         check {
           type     = "tcp"

@@ -1,7 +1,7 @@
-job "crawler-ui-branch-job" {
+job "crawler-ui-master-job" {
   datacenters = ["dc1"]
   type = "service"
-  group "crawler-ui-branch-group" {
+  group "crawler-ui-master-group" {
     count = 1
     restart {
       attempts = 10
@@ -9,10 +9,10 @@ job "crawler-ui-branch-job" {
       delay = "25s"
       mode = "delay"
     }
-    task "crawler-ui-branch-task" {
+    task "crawler-ui-master-task" {
       driver = "docker"
       config {
-        image = "registry.service.consul:5000/crawler_ui:branch"
+        image = "registry.service.consul:5000/crawler_ui:master"
         port_map {
           web = 8000
         }
@@ -21,8 +21,8 @@ job "crawler-ui-branch-job" {
       }
       template {
         data = <<-EOF
-               MONGO="{{range service "mongodb"}}{{.Address}}{{end}}"
-               MONGO_PORT="{{range service "mongodb"}}{{.Port}}{{end}}"
+               MONGO="{{range service "mongodb-master"}}{{.Address}}{{end}}"
+               MONGO_PORT="{{range service "mongodb-master"}}{{.Port}}{{end}}"
                EOF
 
         destination = "secrets/file.env"
@@ -37,12 +37,12 @@ job "crawler-ui-branch-job" {
         }
       }
       service {
-        name = "crawler-ui-branch"
+        name = "crawler-ui-master"
         port = "web"
         tags = [
           "traefik.enable=true",
           "traefik.frontend.entryPoints=https",
-          "traefik.frontend.rule=Host:crawler-branch"
+          "traefik.frontend.rule=Host:crawler-master"
         ]
         check {
           type     = "tcp"
