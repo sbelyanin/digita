@@ -14,10 +14,15 @@
 #       - "mongodb-branch.nomad"
 #       - "registry.nomad"
 #       - "gitlab-consul.nomad"
-       - "gitlab-runner.nomad"
+#       - "gitlab-runner.nomad"
 #       - "rabbitmq.nomad"
 #       - "crawler-master.nomad" 
-
+         - "ui-master.nomad"
+         - "ui-branch.nomad"
+         - "ui-release.nomad"
+         - "app-master.nomad"
+         - "app-branch.nomad"
+         - "app-release.nomad"
   tasks:
     - name: Copy jobs config files into node
       copy:
