@@ -1,9 +1,11 @@
 image: alpine:latest
 
-
 stages:
   - test
   - build
+  - review
+  - build-release
+  - deploy-release
 
 test:
   stage: test
@@ -24,25 +26,54 @@ build-master:
     - "docker push registry.service.consul:5000/crawler_ui:master"
   only:
     - master
+  when: manual
+
+build-branch:
+  stage: build
+  image: docker:git
+  script:
+    - "docker build -t registry.service.consul:5000/crawler_ui:branch ."
+    - "docker push registry.service.consul:5000/crawler_ui:branch"
+  only:
+    - branches
+  except:
+    - master
 
 run-review-master:
   stage: review
   script:
     - "apk add -U curl tar gzip bash ca-certificates git"
-    - "curl --request POST --data @deploy/ui-master.json http://nomad-servers.service.consul:4646/v1/jobs"
+#    - "curl --request POST --data @deploy/ui-master.json http://nomad-servers.service.consul:4646/v1/jobs"
   only:
     - master
   when: manual
 
-rerun-mongodb-master:
+run-review-branch:
   stage: review
   script:
-    - "apk add -U curl jq tar gzip bash ca-certificates git"
-    - "curl http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job | jq '.TaskGroups[0].Count = 0 | {\"Job\": .}' | curl -X POST -d @- http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job"
-    - "sleep 5"
-    - "curl http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job | jq '.TaskGroups[0].Count = 1 | {\"Job\": .}' | curl -X POST -d @- http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job"
+    - "apk add -U curl tar gzip bash ca-certificates git"
+#    - "curl --request POST --data @deploy/ui-branch.json http://nomad-servers.service.consul:4646/v1/jobs"
+  only:
+    - branches
+  except:
+    - master
+
+build-release:
+  stage: build-release
+  image: docker:git
+  script:
+    - "docker build -t registry.service.consul:5000/crawler_ui:release ."
+    - "docker push registry.service.consul:5000/crawler_ui:release"
   only:
     - master
   when: manual
 
+deploy-release:
+  stage: deploy-release
+  script:
+    - "apk add -U curl tar gzip bash ca-certificates git"
+#    - "curl --request POST --data @deploy/ui-release.json http://nomad-servers.service.consul:4646/v1/jobs"
+  only:
+    - master
+  when: manual
 
