@@ -1,7 +1,0 @@
-{
-  "JobID": "mongodb-master-job",
-  "EvalOptions": {
-     "ForceReschedule":true
-  }
-}
-
