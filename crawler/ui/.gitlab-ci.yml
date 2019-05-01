@@ -28,6 +28,16 @@ build-master:
     - master
   when: manual
 
+recreate-mongodb-master:
+  stage: build
+  script:
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job"
+    - "curl --request POST --data @deploy/mongodb-master.json http://nomad-servers.service.consul:4646/v1/jobs"
+  only:
+    - master
+  when: manual
+
 build-branch:
   stage: build
   image: docker:git
@@ -39,11 +49,46 @@ build-branch:
   except:
     - master
 
+recreate-mongodb-branch:
+  stage: build
+  script:   
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/mongodb-branch-job"
+    - "curl --request POST --data @deploy/mongodb-branch.json http://nomad-servers.service.consul:4646/v1/jobs"
+  only:
+    - branches
+  except:
+    - master
+  when: manual
+
 run-review-master:
   stage: review
   script:
-    - "apk add -U curl tar gzip bash ca-certificates git"
-#    - "curl --request POST --data @deploy/ui-master.json http://nomad-servers.service.consul:4646/v1/jobs"
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/crawler-ui-master-job"
+    - "curl --request POST --data @deploy/ui-master.json http://nomad-servers.service.consul:4646/v1/jobs"
+  only:
+    - master
+  when: manual
+  environment:
+    name: master
+    url: https://crawler-master/
+
+
+stop-ui-master:
+  stage: review
+  script:
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/crawler-ui-master-job"
+  only:
+    - master  
+  when: manual
+
+stop-mongodb-master:
+  stage: review
+  script:
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/mongodb-master-job"
   only:
     - master
   when: manual
@@ -51,12 +96,39 @@ run-review-master:
 run-review-branch:
   stage: review
   script:
-    - "apk add -U curl tar gzip bash ca-certificates git"
-#    - "curl --request POST --data @deploy/ui-branch.json http://nomad-servers.service.consul:4646/v1/jobs"
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/crawler-ui-branch-job"
+    - "curl --request POST --data @deploy/ui-branch.json http://nomad-servers.service.consul:4646/v1/jobs"
   only:
     - branches
   except:
     - master
+  environment:
+    name: branch
+    url: https://crawler-branch/
+
+
+stop-ui-branch:
+  stage: review
+  script:
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/crawler-ui-branch-job"
+  only:
+    - branches
+  except:
+    - master
+  when: manual
+
+stop-mongodb-branch:
+  stage: review
+  script:
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/mongodb-branch-job"
+  only:
+    - branches
+  except:
+    - master
+  when: manual
 
 build-release:
   stage: build-release
@@ -71,9 +143,13 @@ build-release:
 deploy-release:
   stage: deploy-release
   script:
-    - "apk add -U curl tar gzip bash ca-certificates git"
-#    - "curl --request POST --data @deploy/ui-release.json http://nomad-servers.service.consul:4646/v1/jobs"
+    - "apk add -U curl git"
+    - "curl --request DELETE http://nomad-servers.service.consul:4646/v1/job/crawler-ui-release-job"
+    - "curl --request POST --data @deploy/ui-release.json http://nomad-servers.service.consul:4646/v1/jobs"
   only:
     - master
   when: manual
+  environment:
+    name: production
+    url: https://crawler/
 

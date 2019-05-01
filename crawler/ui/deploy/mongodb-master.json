@@ -1,0 +1,175 @@
+{
+    "Job": {
+        "Affinities": null,
+        "AllAtOnce": false,
+        "Constraints": null,
+        "Datacenters": [
+            "dc1"
+        ],
+        "Dispatched": false,
+        "ID": "mongodb-master-job",
+        "Meta": null,
+        "Migrate": null,
+        "Name": "mongodb-master-job",
+        "Namespace": "default",
+        "ParameterizedJob": null,
+        "ParentID": "",
+        "Payload": null,
+        "Periodic": null,
+        "Priority": 50,
+        "Region": "global",
+        "Reschedule": null,
+        "Spreads": null,
+        "Stable": false,
+        "Status": "running",
+        "StatusDescription": "",
+        "Stop": false,
+        "TaskGroups": [
+            {
+                "Affinities": null,
+                "Constraints": null,
+                "Count": 1,
+                "EphemeralDisk": {
+                    "Migrate": false,
+                    "SizeMB": 300,
+                    "Sticky": false
+                },
+                "Meta": null,
+                "Migrate": {
+                    "HealthCheck": "checks",
+                    "HealthyDeadline": 300000000000,
+                    "MaxParallel": 1,
+                    "MinHealthyTime": 10000000000
+                },
+                "Name": "mongodb-master-group",
+                "ReschedulePolicy": {
+                    "Attempts": 0,
+                    "Delay": 30000000000,
+                    "DelayFunction": "exponential",
+                    "Interval": 0,
+                    "MaxDelay": 3600000000000,
+                    "Unlimited": true
+                },
+                "RestartPolicy": {
+                    "Attempts": 10,
+                    "Delay": 25000000000,
+                    "Interval": 300000000000,
+                    "Mode": "delay"
+                },
+                "Spreads": null,
+                "Tasks": [
+                    {
+                        "Affinities": null,
+                        "Artifacts": null,
+                        "Config": {
+                            "dns_search_domains": [
+                                "service.consul"
+                            ],
+                            "dns_servers": [
+                                "172.17.0.1",
+                                "8.8.8.8",
+                                "8.8.4.4"
+                            ],
+                            "hostname": "mongodb-master",
+                            "image": "mongo:4.1",
+                            "port_map": [
+                                {
+                                    "db": 27017.0
+                                }
+                            ],
+                            "volumes": [
+                                "local/mongodb-master/data:/data"
+                            ]
+                        },
+                        "Constraints": null,
+                        "DispatchPayload": null,
+                        "Driver": "docker",
+                        "Env": null,
+                        "KillSignal": "",
+                        "KillTimeout": 5000000000,
+                        "Leader": false,
+                        "LogConfig": {
+                            "MaxFileSizeMB": 10,
+                            "MaxFiles": 10
+                        },
+                        "Meta": null,
+                        "Name": "mongodb-master-task",
+                        "Resources": {
+                            "CPU": 300,
+                            "Devices": null,
+                            "DiskMB": 0,
+                            "IOPS": 0,
+                            "MemoryMB": 300,
+                            "Networks": [
+                                {
+                                    "CIDR": "",
+                                    "Device": "",
+                                    "DynamicPorts": [
+                                        {
+                                            "Label": "db",
+                                            "Value": 0
+                                        }
+                                    ],
+                                    "IP": "",
+                                    "MBits": 10,
+                                    "ReservedPorts": null
+                                }
+                            ]
+                        },
+                        "Services": [
+                            {
+                                "AddressMode": "auto",
+                                "CanaryTags": null,
+                                "CheckRestart": null,
+                                "Checks": [
+                                    {
+                                        "AddressMode": "",
+                                        "Args": null,
+                                        "CheckRestart": null,
+                                        "Command": "",
+                                        "GRPCService": "",
+                                        "GRPCUseTLS": false,
+                                        "Header": null,
+                                        "Id": "",
+                                        "InitialStatus": "",
+                                        "Interval": 20000000000,
+                                        "Method": "",
+                                        "Name": "service: \"mongodb-master\" check",
+                                        "Path": "",
+                                        "PortLabel": "",
+                                        "Protocol": "",
+                                        "TLSSkipVerify": false,
+                                        "Timeout": 2000000000,
+                                        "Type": "tcp"
+                                    }
+                                ],
+                                "Id": "",
+                                "Name": "mongodb-master",
+                                "PortLabel": "db",
+                                "Tags": null
+                            }
+                        ],
+                        "ShutdownDelay": 0,
+                        "Templates": null,
+                        "User": "",
+                        "Vault": null
+                    }
+                ],
+                "Update": null
+            }
+        ],
+        "Type": "service",
+        "Update": {
+            "AutoRevert": false,
+            "Canary": 0,
+            "HealthCheck": "",
+            "HealthyDeadline": 0,
+            "MaxParallel": 0,
+            "MinHealthyTime": 0,
+            "ProgressDeadline": 0,
+            "Stagger": 0
+        },
+        "VaultToken": "",
+        "Version": 8
+    }
+}
