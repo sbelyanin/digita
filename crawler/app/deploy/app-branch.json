@@ -1,0 +1,189 @@
+{
+    "Job": {
+        "Affinities": null,
+        "AllAtOnce": false,
+        "Constraints": null,
+        "CreateIndex": 2101,
+        "Datacenters": [
+            "dc1"
+        ],
+        "Dispatched": false,
+        "ID": "crawler-app-branch-job",
+        "JobModifyIndex": 2720,
+        "Meta": null,
+        "Migrate": null,
+        "ModifyIndex": 2720,
+        "Name": "crawler-app-branch-job",
+        "Namespace": "default",
+        "ParameterizedJob": null,
+        "ParentID": "",
+        "Payload": null,
+        "Periodic": null,
+        "Priority": 50,
+        "Region": "global",
+        "Reschedule": null,
+        "Spreads": null,
+        "Stable": false,
+        "Status": "running",
+        "StatusDescription": "",
+        "Stop": false,
+        "SubmitTime": 1556635835059312243,
+        "TaskGroups": [
+            {
+                "Affinities": null,
+                "Constraints": null,
+                "Count": 1,
+                "EphemeralDisk": {
+                    "Migrate": false,
+                    "SizeMB": 300,
+                    "Sticky": false
+                },
+                "Meta": null,
+                "Migrate": {
+                    "HealthCheck": "checks",
+                    "HealthyDeadline": 300000000000,
+                    "MaxParallel": 1,
+                    "MinHealthyTime": 10000000000
+                },
+                "Name": "crawler-app-branch-group",
+                "ReschedulePolicy": {
+                    "Attempts": 0,
+                    "Delay": 30000000000,
+                    "DelayFunction": "exponential",
+                    "Interval": 0,
+                    "MaxDelay": 3600000000000,
+                    "Unlimited": true
+                },
+                "RestartPolicy": {
+                    "Attempts": 10,
+                    "Delay": 25000000000,
+                    "Interval": 300000000000,
+                    "Mode": "delay"
+                },
+                "Spreads": null,
+                "Tasks": [
+                    {
+                        "Affinities": null,
+                        "Artifacts": null,
+                        "Config": {
+                            "port_map": [
+                                {
+                                    "prom_metr": 8000.0
+                                }
+                            ],
+                            "dns_search_domains": [
+                                "service.consul"
+                            ],
+                            "dns_servers": [
+                                "172.17.0.1",
+                                "8.8.8.8",
+                                "8.8.4.4"
+                            ],
+                            "image": "registry.service.consul:5000/crawler_app:branch"
+                        },
+                        "Constraints": null,
+                        "DispatchPayload": null,
+                        "Driver": "docker",
+                        "Env": null,
+                        "KillSignal": "",
+                        "KillTimeout": 5000000000,
+                        "Leader": false,
+                        "LogConfig": {
+                            "MaxFileSizeMB": 10,
+                            "MaxFiles": 10
+                        },
+                        "Meta": null,
+                        "Name": "crawler-app-branch-task",
+                        "Resources": {
+                            "CPU": 200,
+                            "Devices": null,
+                            "DiskMB": 0,
+                            "IOPS": 0,
+                            "MemoryMB": 200,
+                            "Networks": [
+                                {
+                                    "CIDR": "",
+                                    "Device": "",
+                                    "DynamicPorts": [
+                                        {
+                                            "Label": "prom_metr",
+                                            "Value": 0
+                                        }
+                                    ],
+                                    "IP": "",
+                                    "MBits": 10,
+                                    "ReservedPorts": null
+                                }
+                            ]
+                        },
+                        "Services": [
+                            {
+                                "AddressMode": "auto",
+                                "CanaryTags": null,
+                                "CheckRestart": null,
+                                "Checks": [
+                                    {
+                                        "AddressMode": "",
+                                        "Args": null,
+                                        "CheckRestart": null,
+                                        "Command": "",
+                                        "GRPCService": "",
+                                        "GRPCUseTLS": false,
+                                        "Header": null,
+                                        "Id": "",
+                                        "InitialStatus": "",
+                                        "Interval": 20000000000,
+                                        "Method": "",
+                                        "Name": "service: \"crawler-app-branch\" check",
+                                        "Path": "",
+                                        "PortLabel": "",
+                                        "Protocol": "",
+                                        "TLSSkipVerify": false,
+                                        "Timeout": 2000000000,
+                                        "Type": "tcp"
+                                    }
+                                ],
+                                "Id": "",
+                                "Name": "crawler-app-branch",
+                                "PortLabel": "prom_metr",
+                                "Tags": null
+                            }
+                        ],
+                        "ShutdownDelay": 0,
+                        "Templates": [
+                            {
+                                "ChangeMode": "restart",
+                                "ChangeSignal": "",
+                                "DestPath": "secrets/file.env",
+                                "EmbeddedTmpl": "MONGO=\"{{range service \"mongodb-branch\"}}{{.Address}}{{end}}\"\nMONGO_PORT=\"{{range service \"mongodb-branch\"}}{{.Port}}{{end}}\"\nRMQ_HOST=\"{{range service \"rabbitmq\"}}{{.Address}}{{end}}\"\nRMQ_PORT=\"{{range service \"rabbitmq\"}}{{.Port}}{{end}}\"\nRMQ_QUEUE=\"urls-branch\"\n",
+                                "Envvars": true,
+                                "LeftDelim": "{{",
+                                "Perms": "0644",
+                                "RightDelim": "}}",
+                                "SourcePath": "",
+                                "Splay": 5000000000,
+                                "VaultGrace": 15000000000
+                            }
+                        ],
+                        "User": "",
+                        "Vault": null
+                    }
+                ],
+                "Update": null
+            }
+        ],
+        "Type": "service",
+        "Update": {
+            "AutoRevert": false,
+            "Canary": 0,
+            "HealthCheck": "",
+            "HealthyDeadline": 0,
+            "MaxParallel": 0,
+            "MinHealthyTime": 0,
+            "ProgressDeadline": 0,
+            "Stagger": 0
+        },
+        "VaultToken": "",
+        "Version": 3
+    }
+}
