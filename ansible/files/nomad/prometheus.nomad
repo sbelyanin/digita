@@ -20,6 +20,26 @@ job "prometheus" {
     }
 
     task "prometheus" {
+
+      template {
+        change_mode = "noop"
+        destination = "local/alerts_rule.yml"
+        data = <<EOH
+---
+groups:
+- name: prometheus_alerts
+  rules:
+  - alert: Instance down
+    expr: up == 0
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      description: "Instance down."
+
+EOH
+      }
+
       template {
         change_mode = "noop"
         destination = "local/prometheus.yml"
@@ -29,36 +49,69 @@ global:
   scrape_interval:     5s
   evaluation_interval: 5s
 
+rule_files:
+  - "alerts_rule.yml"
+
+alerting:
+  alertmanagers:
+  - consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['alertmanager']
+
 scrape_configs:
-
   - job_name: 'nomad_metrics'
-
     consul_sd_configs:
     - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
-      services: ['nomad-client', 'nomad']
-
+      services: ['nomad-clients', 'nomad']
     relabel_configs:
     - source_labels: ['__meta_consul_tags']
       regex: '(.*)http(.*)'
       action: keep
-
-    scrape_interval: 5s
+    scrape_interval: 15s
     metrics_path: /v1/metrics
     params:
       format: ['prometheus']
+
+  - job_name: 'consul_metrics'
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['consul']
+    relabel_configs:
+    - source_labels: ['__address__']
+      target_label: __address__
+      regex: '(.*):(.*)'
+      replacement: ${1}:8500
+    scrape_interval: 15s
+    metrics_path: /v1/agent/metrics
+    params:
+      format: ['prometheus']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'alertmanager'
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['alertmanager']
+
 EOH
       }
       driver = "docker"
       config {
         image = "prom/prometheus:latest"
         volumes = [
-          "local/prometheus.yml:/etc/prometheus/prometheus.yml"
+          "local/prometheus.yml:/etc/prometheus/prometheus.yml",
+          "local/alerts_rule.yml:/etc/prometheus/alerts_rule.yml"
+#          "/srv//prometheus/tsdb:/prometheus"
         ]
         port_map {
           prometheus_ui = 9090
         }
       }
       resources {
+        cpu    = "500"
+        memory = "300"
         network {
           mbits = 10
           port "prometheus_ui" {}

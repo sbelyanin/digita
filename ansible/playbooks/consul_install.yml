@@ -10,3 +10,6 @@
       consul_recursors: ['8.8.8.8', '8.8.4.4']
       consul_client_address: "0.0.0.0" 
       consul_dnsmasq_enable: yes
+      consul_config_custom:
+        telemetry:
+          prometheus_retention_time  : "1h"
