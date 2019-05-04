@@ -27,8 +27,8 @@ job "rabbitmq-job" {
         dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
       }
       resources {
-        cpu    = "500"
-        memory = "500"
+        cpu    = "300"
+        memory = "200"
         network {
           mbits = 10
           port "web" {}

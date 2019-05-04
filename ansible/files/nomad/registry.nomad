@@ -39,6 +39,8 @@ job "registry-job" {
       }
 
       resources {
+        cpu    = "200"
+        memory = "100"
         network {
           mbits = 10
           port "reg_port" {

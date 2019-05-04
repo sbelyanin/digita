@@ -18,7 +18,13 @@
 #       - "rabbitmq.nomad"
 #       - "prometheus.nomad" 
 #       - "alertmanager.nomad"
-        - "grafana.nomad"
+#       - "grafana.nomad"
+#        - "node-exporter.nomad"
+#        - "cadvisor.nomad"
+#        - "fluentd-make.nomad"
+#        - "fluentd.nomad"
+        - "odfe.nomad"
+
   tasks:
     - name: Copy jobs config files into node
       copy:

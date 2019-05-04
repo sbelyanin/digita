@@ -95,6 +95,20 @@ scrape_configs:
     - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
       services: ['alertmanager']
 
+  - job_name: 'node-exporter'
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['node-exporter']
+
+  - job_name: 'cadvisor'
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['cadvisor']
+
+  - job_name: 'crawler-app'
+    consul_sd_configs:
+    - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+      services: ['crawler-app-master', 'crawler-app', 'crawler-app-branch']
 EOH
       }
       driver = "docker"

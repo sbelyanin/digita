@@ -49,6 +49,8 @@ job "runner-job" {
         destination = "local/entrypoint.sh"
       }
       resources {
+        cpu    = "200"
+        memory = "150"
         network {
           mbits = 10
         }
