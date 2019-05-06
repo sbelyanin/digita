@@ -1,6 +1,8 @@
 # DIGITA - make CI/CD easy
 
 ## Introduce
+ - Общий план нашего кластера:
+ ![Cluster](/doc/digita-01.png)
 
 ### For first release
 
