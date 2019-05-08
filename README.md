@@ -69,7 +69,7 @@ sudo yum install ansible
 ```
 ```bash
 #(GCP) modules require both the requests and the google-auth libraries to be installed.
-pip install requests google-auth
+pip install requests google-auth apache-libcloud
 ```
 
  - OpenSSL
@@ -96,13 +96,14 @@ zone = europe-west1-b
 [core]
 account = youaccount@gmail.com
 disable_usage_reporting = True
-project = youproject
+project = you_gcp_project
 ```
 - GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
   - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
-  - В итоге нужно получить полномочия в виде файла в JSON формате и скопировать его в домашний каталог пользователя, в диреторию gcp (пример):
-  ```bash
-  cat ~/gcp/infra.json 
+  - В итоге нужно получить полномочия в виде файла (в JSON формате) и скопировать его в домашний каталог пользователя, в директорию gcp (пример):
+```bash
+mkdir ~/gcp && cp ${where is service account json file} ~/gcp/infra.json
+cat ~/gcp/infra.json 
 {
   "type": "service_account",
   "project_id": "youprojectid",
@@ -115,11 +116,21 @@ project = youproject
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/87323425125-compute%40developer.gserviceaccount.com"
 }
-  ```
 
+```
+- Ansible Dynamic Inventory On Google Cloud:
+```bash
+cd /tmp && git clone https://github.com/ansible/ansible
+cp /tmp/ansible/contrib/inventory/gce.ini ~/gcp/gce.ini
+vim ~/gcp/gce.ini
+###
+###Edit/insert values into file:
+#gce_service_account_email_address = you_email_address@developer.gserviceaccount.com 
+#gce_service_account_pem_file_path = ~/gcp/infra.json
+#gce_project_id = you_gcp_project
+```
 ## Prepare
-
- - Clone this repository- 
+ - Clone this repository - cd 
  - Test for compatible local requirements.
  - Run 
    ssh-keygen -t rsa -f ~/.ssh/developer -C developer -P ""
