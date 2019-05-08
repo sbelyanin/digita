@@ -98,9 +98,9 @@ account = youaccount@gmail.com
 disable_usage_reporting = True
 project = youproject
 ```
-_ GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
+- GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
   - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
-  - В итоге нужно получить полномочия в виде файла в JSON формате и скопировать в домашний каталог пользователя, в диреторию gcp (пример):
+  - В итоге нужно получить полномочия в виде файла в JSON формате и скопировать его в домашний каталог пользователя, в диреторию gcp (пример):
   ```bash
   cat ~/gcp/infra.json 
 {
@@ -115,16 +115,11 @@ _ GCP Credentials. Для совместной работы Ansible и GCP ну�
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/87323425125-compute%40developer.gserviceaccount.com"
 }
-
-  
   ```
-
-
-
 
 ## Prepare
 
- - Clone this repository.
+ - Clone this repository- 
  - Test for compatible local requirements.
  - Run 
    ssh-keygen -t rsa -f ~/.ssh/developer -C developer -P ""
