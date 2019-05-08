@@ -26,7 +26,7 @@
 
 ## Global Requrenments
 
- - GCP account
+ - GCP account https://cloud.google.com/ - Потребуется Банковская карта для регистрации акаунта.
  
 ## Local Requrenments
  
@@ -67,12 +67,60 @@ sudo apt-get install ansible
 sudo yum install ansible
 
 ```
+```bash
+#(GCP) modules require both the requests and the google-auth libraries to be installed.
+pip install requests google-auth
+```
+
  - OpenSSL
 ```bash
 openssl version
 ```
- - GCP SDK (gcloud), Ansible 
- 
+ - GCP SDK (gcloud) https://cloud.google.com/sdk/install
+Quickstart for Linux - https://cloud.google.com/sdk/docs/quickstart-linux
+Debian/Ubuntu - https://cloud.google.com/sdk/docs/downloads-apt-get
+CentOS/RHEL - https://cloud.google.com/sdk/docs/downloads-yum
+ - Быстрый тест:
+```bash
+gcloud auth list
+
+Credentialed Accounts
+ACTIVE  ACCOUNT
+*       youaccount@gmail.com
+
+gcloud config list
+
+[compute]
+region = europe-west1
+zone = europe-west1-b
+[core]
+account = youaccount@gmail.com
+disable_usage_reporting = True
+project = youproject
+```
+_ GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
+  - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
+  - В итоге нужно получить полномочия в виде файла в JSON формате и скопировать в домашний каталог пользователя, в диреторию gcp (пример):
+  ```bash
+  cat ~/gcp/infra.json 
+{
+  "type": "service_account",
+  "project_id": "youprojectid",
+  "private_key_id": "youprivatekeyid",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDbjs7xAJ3aubPK\naQdS2TREaIbWstPX+do/EJY=\n-----END PRIVATE KEY-----\n",
+  "client_email": "824434134134112-compute@developer.gserviceaccount.com",
+  "client_id": "108742520784583179674",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/87323425125-compute%40developer.gserviceaccount.com"
+}
+
+  
+  ```
+
+
+
 
 ## Prepare
 
