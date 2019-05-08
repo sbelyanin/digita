@@ -24,10 +24,55 @@
  - Assign dev, stage and prod environment
  - Install Prometheus, EFK
 
-## Requrements
+## Global Requrenments
 
  - GCP account
+ 
+## Local Requrenments
+ 
+ - Linux Workstation (Ubuntu, Debian, CentOS)
+ - Git:
+```bash
+#Ubuntu, Debian
+sudo apt update && sudo apt install git
+git config --global user.name "Your Name"
+git config --global user.email "youremail@domain.com"
+git version
+```
+```bash
+#CentOS, RHEL
+sudo yum update && sudo yum install git
+git config --global user.name "Your Name"
+git config --global user.email "youremail@domain.com"
+git version
+```
+ - Anible (https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html):
+```bash
+#Ubuntu:
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo apt-add-repository --yes --update ppa:ansible/ansible
+sudo apt-get install ansible
+```
+```bash
+#Debian
+deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+sudo apt-get update
+sudo apt-get install ansible
+
+```
+```bash
+#CentOS - RPMs for currently supported versions of RHEL, CentOS, and Fedora are available from EPEL as well as releases.ansible.com.
+sudo yum install ansible
+
+```
+ - OpenSSL
+```bash
+openssl version
+```
  - GCP SDK (gcloud), Ansible 
+ 
 
 ## Prepare
 
