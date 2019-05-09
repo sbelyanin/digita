@@ -182,6 +182,44 @@ cluster-node-01 | SUCCESS => {
     "ping": "pong"
 }
 ```
- - Run ansible-playbook playbooks/cert-install.yml
- - Run ansible-playbook playbooks/consul-install.yml
- - Run ansible-playbook playbooks/docker-install.yml
+ - Установим сертификаты и CA на все ноды:
+ ```bash
+ cd ~/digita/ansible
+ ansible-playbook playbooks/cert_install.yml
+ #Cut output here
+ #PLAY RECAP *********************************************************************************************************
+ #cluster-node-01            : ok=7    changed=6    unreachable=0    failed=0   
+ #cluster-node-02            : ok=7    changed=6    unreachable=0    failed=0   
+ #cluster-node-03            : ok=7    changed=6    unreachable=0    failed=0   
+ ```
+ - Установим docker на ноды:
+ ```bash
+ cd ~/digita/ansible
+ ansible-playbook playbooks/docker_install.yml
+ #Cut output here
+ #PLAY RECAP *******************************************************************************************************
+ #cluster-node-01            : ok=15   changed=7    unreachable=0    failed=0   
+ #cluster-node-02            : ok=15   changed=7    unreachable=0    failed=0   
+ #cluster-node-03            : ok=15   changed=7    unreachable=0    failed=0
+ 
+ ```
+ - Установим consul и nomad (основные компоненты кластера) на ноды:
+ ```bash
+ cd ~/digita/ansible
+ ansible-playbook playbooks/consul_install.yml
+ ansible-playbook playbooks/nomad_install.yml 
+ ```
+ Убедитесь что инсталяции consul и nomad прошли успешно, вывод работы ansible-playbook не должен содеpжать ошибки (failed=0):
+ ```bash
+ #Cut output here
+ #PLAY RECAP *******************************************************************************************************
+ #cluster-node-01            : ok=25   changed=19   unreachable=0    failed=0   
+ #cluster-node-02            : ok=24   changed=19   unreachable=0    failed=0   
+ #cluster-node-03            : ok=24   changed=19   unreachable=0    failed=0
+ ```
+ - Установим системные компоненты для нашего кластера (каждый компонент будет запущен на каждой ноде). Traefik, Hashi-ui, cadvisor, node-exporter и fluentd:
+ ```bash
+ cd ~/digita/ansible
+ 
+ ```
+ 
