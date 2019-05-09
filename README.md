@@ -130,11 +130,26 @@ vim ~/gcp/gce.ini
 #gce_project_id = you_gcp_project
 ```
 ## Prepare
- - Clone this repository - cd 
- - Test for compatible local requirements.
- - Run 
-   ssh-keygen -t rsa -f ~/.ssh/developer -C developer -P ""
-   ssh-keygen -t rsa -f ~/.ssh/ansible -C ansible -P ""
+ - склонируем репозитарий в домашнюю директорию:
+ ```bash
+ cd ~ && git clone https://github.com/sbelyanin/digita.git
+ ```
+ -  Сгенерируем локально ключи, сертификаты для CA, https и ssh при помощи плайбука ансибла: 
+ ```bash
+ cd ~/digita/ansible
+ ansible-playbook playbooks/cert_key_make.yml
+ 
+ #Cut output here
+ #PLAY RECAP*********************************************************************************************************
+ #localhost                  : ok=2    changed=2    unreachable=0    failed=0
+ 
+ ls files/certs/*
+ files/certs/CA.crt  files/certs/CA.srl        files/certs/registry.csr  files/certs/traefik.crt  files/certs/traefik.key
+ files/certs/CA.key  files/certs/registry.crt  files/certs/registry.key  files/certs/traefik.csr
+ 
+ cd ~/.ssh/ && ls ansible* developer*
+ ansible  ansible.pub  developer  developer.pub
+ ```
 
 ## Install
 
