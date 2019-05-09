@@ -1,0 +1,30 @@
+---
+- name: Copy and run sytem and service jobs nomad cluster
+  hosts: tag_nomad-instances
+  become: true
+  vars:
+    nomad_jobs_dir: "/srv/nomad/jobs"
+    nomad_jobs_file:
+       - "registry.nomad"
+       - "traefik.nomad"
+       - "hashi-ui.nomad"
+       - "fluentd-make.nomad"
+       - "mongodb.nomad"
+       - "rabbitmq.nomad"
+       - "node-exporter.nomad"
+       - "cadvisor.nomad"
+       - "fluentd.nomad"
+
+  tasks:
+    - name: Copy jobs config files into node
+      copy:
+        src: "../files/nomad/{{ item }}"
+        dest: "{{ nomad_jobs_dir }}"
+      with_items: "{{ nomad_jobs_file }}"
+
+    - name: Run jobs into nomad cluster
+      run_once: true
+      shell: "nomad run {{ item }}" 
+      args:
+        chdir: "{{ nomad_jobs_dir }}"
+      with_items: "{{ nomad_jobs_file }}" 
