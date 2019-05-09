@@ -13,7 +13,7 @@
     cluster_node:
       - name: "cluster-node-01"
         disk_size: 30
-        machine_type: "n1-standard-1"
+        machine_type: "n1-standard-2"
         consul_node_role: "bootstrap"
         nomad_node_role: "both"
         snode: true
@@ -24,7 +24,7 @@
         mongodb: true
       - name: "cluster-node-02"
         disk_size: 30
-        machine_type: "n1-standard-1"
+        machine_type: "n1-standard-2"
         consul_node_role: "server"
         nomad_node_role: "both"
         snode: true
@@ -35,7 +35,7 @@
         mongodb: true
       - name: "cluster-node-03"
         disk_size: 30
-        machine_type: "n1-standard-1"
+        machine_type: "n1-standard-2"
         consul_node_role: "server"
         nomad_node_role: "both"
         snode: true

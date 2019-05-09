@@ -1,6 +1,7 @@
 ---
-- name: Self signet cert install
+- name: Create CA, ssh, self signet cert and key
   hosts: localhost
+  gather_facts: false
   vars:
     self_signed_certs:
       - key: "traefik.key"
@@ -13,8 +14,15 @@
         dir: "../files/certs"
         subj: "/C=RU/ST=Moscow/L=Moscow/O=GS/OU=IT/CN=registry.service.consul"
         csr: "registry.csr"
+    ssh_key:
+      - name: "ansible2"
+        type: "rsa"
+        bits: "2048"
+      - name: "developer"
+        type: "rsa"
+        bits: "2048"
   tasks:
-    - name: Create self signet cert
+    - name: Create CA and self signet cert
       shell: | 
         [ -f CA.key hosts ] && echo "CA.key already exist" || openssl genrsa -out CA.key 2048        
         [ -f CA.crt hosts ] && echo "CA.crt already exist" || openssl req -x509 -new -nodes -subj '/C=RU/ST=Moscow/L=Moscow/O=GS/OU=IT/CN=CA' -key CA.key -days 10000 -out CA.crt
@@ -29,3 +37,11 @@
       args:
         chdir: "{{ item.dir }}"
       with_items: "{{ self_signed_certs }}"
+
+    - name: Create ssh key pairs
+      shell: |
+       ssh-keygen -q -b "{{ item.bits }}" -t "{{ item.type }}" -f ~/.ssh/"{{ item.name }}" -C "{{ item.name }}" -P ""
+      args:
+       creates: "~/.ssh/{{ item.name }}"
+      with_items: "{{ ssh_key }}"
+
