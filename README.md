@@ -217,9 +217,18 @@ cluster-node-01 | SUCCESS => {
  #cluster-node-02            : ok=24   changed=19   unreachable=0    failed=0   
  #cluster-node-03            : ok=24   changed=19   unreachable=0    failed=0
  ```
- - Установим системные компоненты для нашего кластера (каждый компонент будет запущен на каждой ноде). Traefik, Hashi-ui, cadvisor, node-exporter и fluentd:
+ - Установим cthdbcs системные компоненты для нашего кластера (каждый компонент будет запущен на каждой ноде). Traefik, Hashi-ui, registry, cadvisor, node-exporter и fluentd:
  ```bash
  cd ~/digita/ansible
- 
+ ansible-playbook playbooks/jobs_service_install.ym
  ```
+ 
+ - Добавим резолвинг наших сервисов в локальный резолвинг через /etc/hosts используя публичный IP первой ноды:
+ ```bash
+ cd ~/digita/ansible
+ export RESOLV=`./inventory.py --refresh-cache | jq -r '._meta.hostvars."cluster-node-01".gce_public_ip'`
+ echo -e "$RESOLV gitlab hashi-ui rabbitmq crawler-master crawler-branch crawler prometheus grafana kibana\n" | sudo tee -a /etc/host
+ ```
+ - Зайдем на https://hashi-ui (сторонний web ui для Consul и Nomad) и проверим работу кластера. Т.к. на сертификат самоподписанный в браузере придется подтвердить исключение безопасности:
+  ![Hashi-ui](/doc/Nomad-Hashi-UI.png)
  
