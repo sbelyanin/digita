@@ -98,6 +98,10 @@ account = youaccount@gmail.com
 disable_usage_reporting = True
 project = you_gcp_project
 ```
+- Jq
+```bash
+sudo apt  install jq
+```
 - GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
   - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
   - В итоге нужно получить полномочия в виде файла (в JSON формате) и скопировать его в домашний каталог пользователя, в директорию gcp (пример):
@@ -152,10 +156,32 @@ vim ~/gcp/gce.ini
  ```
 
 ## Install
-
- - Run ansible-playbook playbooks/host-install.yml
- - Run ./inventory.py --refresh-cache
- - Run ansible-playbook playbooks/cert-make.yml
+ - 1. Создание будущих нод кластера:
+ ```bash
+ cd ~/digita/ansible
+ ansible-playbook playbooks/host-install.yml
+ #Cut output here
+ #PLAY RECAP *********************************************************************************************************
+ #localhost                  : ok=5    changed=3    unreachable=0    failed=0   
+ ```
+ - Проверим работу dynamic inventory и доступность нод кластера:
+```bash
+cd ~/digita/ansible
+./inventory.py --refresh-cache | jq
+ansible -m ping tag_cluster-node
+cluster-node-03 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+cluster-node-02 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+cluster-node-01 | SUCCESS => {
+    "changed": false, 
+    "ping": "pong"
+}
+```
  - Run ansible-playbook playbooks/cert-install.yml
  - Run ansible-playbook playbooks/consul-install.yml
  - Run ansible-playbook playbooks/docker-install.yml
