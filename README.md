@@ -1,37 +1,48 @@
 # DIGITA - make CI/CD easy
 
-## Introduce
+# Оглавление
 
- - Зачем? 
-  - Для создания готовго тестового стэнда для практического изучения CI/CD.
-  - Как проектная работа завершающая обучение в компнии OTUS.
- - Выбор компонентов для построения системы CI/CD:
-  - GCP как платформа- есть опыт работы с данной платформой и ресурсы.
-  - Ansible как система управления конфигурациями - широко распостраненная система.
-  - Nomad HashiCorp как система оркестрации контейнеров - как альтернатива K8S.
-  - Consul HashiCorp децентрализованный отказоустойчивый discovery-сервис - хорошая интеграция с Nomad и другими сервисами.
-  - GitLab CE - современное популярное решение для управления разработкой программного обеспечения.
-  - Prometheus - рограммный проект с открытым исходным кодом, написанный на Go, который используется для записи метрик в реальном времени в базе данных временных рядов.
-  
-  
- - Общий план нашего кластера:
+1. Введение
+    - Зачем?
+    - Выбор.
+    - Общий план.  
+2. Global Requrenments
+3. Local Requrenments
+    - Linux Workstation
+    - Git
+    - Ansible
+    - Openssl
+    - GCP SDK (gcloud)
+    - Jq
+    - GCP Credentials
+4. Подготовка
+5. Cluster Install
+6. Gitlab Install
+7. Prometheus Install
+8. Setup pipeline
+
+
+## 1. Introduce
+
+ - ### Зачем? 
+      - Для создания готового тестового стэнда для практического изучения CI/CD.
+      - Как проектная работа завершающая обучение в компнии OTUS.
+ - ### Выбор компонентов для построения системы CI/CD:
+      - GCP как платформа- есть опыт работы с данной платформой и ресурсы.
+      - Ansible как система управления конфигурациями - широко распостраненная система.
+      - Nomad HashiCorp как система оркестрации контейнеров - как альтернатива K8S.
+      - Consul HashiCorp децентрализованный отказоустойчивый discovery-сервис - хорошая интеграция с Nomad и другими сервисами.
+      - GitLab CE - современное популярное решение для управления разработкой программного обеспечения.
+      - Prometheus - рограммный проект с открытым исходным кодом, написанный на Go, который используется для записи метрик в реальном времени в базе данных временных рядов.
+      - Общий план нашего кластера:
  ![Cluster](/doc/digita-01.png)
 
-### For first release
-
- - Install Nomad cluster whith Consul integration.
- - Install custom GitLab CI/CD
- - Assign dev, stage and prod environment
- - Install Prometheus, EFK
-
-## Global Requrenments
-
- - GCP account https://cloud.google.com/ - Потребуется Банковская карта для регистрации акаунта.
+## 2. Global Requrenments
+- GCP account https://cloud.google.com/ - Потребуется Банковская карта для регистрации акаунта.
  
-## Local Requrenments
- 
- - Linux Workstation (Ubuntu, Debian, CentOS)
- - Git:
+## 3. Local Requrenments
+- Linux Workstation (Ubuntu, Debian, CentOS)
+- Git:
 ```bash
 #Ubuntu, Debian
 sudo apt update && sudo apt install git
@@ -100,11 +111,11 @@ project = you_gcp_project
 ```
 - Jq
 ```bash
-sudo apt  install jq
+sudo apt install jq
 ```
 - GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
-  - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
-  - В итоге нужно получить полномочия в виде файла (в JSON формате) и скопировать его в домашний каталог пользователя, в директорию gcp (пример):
+    - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
+    - В итоге нужно получить полномочия в виде файла (в JSON формате) и скопировать его в домашний каталог пользователя, в директорию gcp (пример):
 ```bash
 mkdir ~/gcp && cp ${where is service account json file} ~/gcp/infra.json
 cat ~/gcp/infra.json 
@@ -133,8 +144,8 @@ vim ~/gcp/gce.ini
 #gce_service_account_pem_file_path = ~/gcp/infra.json
 #gce_project_id = you_gcp_project
 ```
-## Prepare
- - склонируем репозитарий в домашнюю директорию:
+## 4. Подготовка
+ - Склонируем репозитарий в домашнюю директорию:
  ```bash
  cd ~ && git clone https://github.com/sbelyanin/digita.git
  ```
@@ -155,8 +166,8 @@ vim ~/gcp/gce.ini
  ansible  ansible.pub  developer  developer.pub
  ```
 
-## Cluster Install
- - 1. Создание будущих нод кластера:
+## 5. Cluster Install
+ - Создание будущих нод кластера:
  ```bash
  cd ~/digita/ansible
  ansible-playbook playbooks/host-install.yml
@@ -217,7 +228,7 @@ cluster-node-01 | SUCCESS => {
  #cluster-node-02            : ok=24   changed=19   unreachable=0    failed=0   
  #cluster-node-03            : ok=24   changed=19   unreachable=0    failed=0
  ```
- - Установим cthdbcs системные компоненты для нашего кластера (каждый компонент будет запущен на каждой ноде). Traefik, Hashi-ui, registry, cadvisor, node-exporter и fluentd:
+ - Установим сервисы и системные компоненты для нашего кластера (системные компоненты будут запущены на каждой ноде). Traefik, Hashi-ui, registry, cadvisor, node-exporter и fluentd:
  ```bash
  cd ~/digita/ansible
  ansible-playbook playbooks/jobs_service_install.ym
@@ -232,7 +243,7 @@ cluster-node-01 | SUCCESS => {
  - Зайдем на https://hashi-ui (сторонний web ui для Consul и Nomad) и проверим работу кластера. Т.к. на сертификат самоподписанный в браузере придется подтвердить исключение безопасности:
   ![Hashi-ui](/doc/Nomad-Hashi-UI.png)
   
-## Gitlab Install
+## 6. Gitlab Install
  - Все готово для инсталяции нашей системы разработки и поставки приложения.
  - Для разработки и тестирования приложения к Gitlabу нужен агент - раннер, он же в свою очередь должен зарегестрироватья в gitlab при помощи токена, который неизвестен и не задан (в текущей реализации проекта) на моменте инсталяции. Поэтому его нужно узнать токен после инсталяции gitlab и передать его в раннер при старте. Для того чтобы ранер при старте "знал" токен воспользуемся KV хранилищем предоставляемым Consul сервисом. Также воспользуемся этим для хранения CA сертификата чтобы подключаться к докер репозитарию из раннера. Так как Nomad на текущий момент (v0.9) не умеет задавать очередность выполнения заданий (в роадмапе уже есть в v1.0) выполним задачу в несколько этапов.
  - Проинсталируем gitlab и gitlab-runner и задачу по получению токена одновремено, после этого перестартуем в нужном нам порядке:
