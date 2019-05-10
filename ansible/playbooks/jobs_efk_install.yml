@@ -5,24 +5,6 @@
   vars:
     nomad_jobs_dir: "/srv/nomad/jobs"
     nomad_jobs_file:
-#       - "nginx.nomad"
-#       - "traefik.nomad"
-#       - "hashi-ui.nomad"
-#       - "gitlab.nomad"
-#       - "mongodb.nomad"
-#       - "mongodb-master.nomad"
-#       - "mongodb-branch.nomad"
-#       - "registry.nomad"
-#       - "gitlab-consul.nomad"
-#       - "gitlab-runner.nomad"
-#       - "rabbitmq.nomad"
-#       - "prometheus.nomad" 
-#       - "alertmanager.nomad"
-#       - "grafana.nomad"
-#        - "node-exporter.nomad"
-#        - "cadvisor.nomad"
-#        - "fluentd-make.nomad"
-#        - "fluentd.nomad"
         - "odfe.nomad"
 
   tasks:

@@ -1,0 +1,24 @@
+---
+- name: Copy and run jobs nomad cluster
+  hosts: tag_nomad-instances
+  become: true
+  vars:
+    nomad_jobs_dir: "/srv/nomad/jobs"
+    nomad_jobs_file:
+       - "prometheus.nomad" 
+       - "alertmanager.nomad"
+       - "grafana.nomad"
+
+  tasks:
+    - name: Copy jobs config files into node
+      copy:
+        src: "../files/nomad/{{ item }}"
+        dest: "{{ nomad_jobs_dir }}"
+      with_items: "{{ nomad_jobs_file }}"
+
+    - name: Run jobs into nomad cluster
+      run_once: true
+      shell: "nomad run {{ item }}" 
+      args:
+        chdir: "{{ nomad_jobs_dir }}"
+      with_items: "{{ nomad_jobs_file }}" 
