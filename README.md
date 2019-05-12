@@ -251,6 +251,13 @@ cluster-node-01 | SUCCESS => {
   cd ~/digita/ansible
   ansible-playbook playbooks/jobs_gitlab_install.yml
   ```
+  - Вернемся в "hashi-ui" и проверим что KV значения хранят нужные нам данные. Это "gitlab/runner_ca" и gitlab/runner_token":    
+  Передем в настройки "Consul", зайдем в KV хранилише и посмотрим значения ключей в "gitlab" ветке:
+  ![hashi-ui-consul-kv-gitlab](doc/hashi-ui-consul-kv-gitlab-all.png)
+ 
+  - Если их нет, или остутствует один из них, нужно перезапустить задание отвечающее за наполнение данной ветки KV хранилища в нашем кластере: 
+  ![hashi-ui-nomad-restart-gitlab-consul](doc/hashi-ui-nomad-restart-gitlab-consul-all.png)
+  
   - Зайдем на http://gitlab/, введем пароль для административного пользователя root:
   ![gitlab-reg](doc/gitlab-reg.png)
   - Войдем под пользователем "root" с введеным ранее паролем в систему gitlab.
@@ -275,14 +282,19 @@ cluster-node-01 | SUCCESS => {
       ![gitlab-create-new-user-profile](doc/gitlab-create-new-user-profile.png)
       ![gitlab-create-new-user-pkey](doc/gitlab-create-new-user-pkey.png)
       ![gitlab-create-new-user-done](doc/gitlab-create-new-user-donw.png)
+  
+  - Проверим наличие зарегестрированного ранера в GitLab. Зайдем в "Admin Area", "Runners" и проверим:
+      - Если в наличии у нас нету раннеров:
+      ![gitlab-runnner-absent](doc/gitlab-runnner-absent.png)
+      - переходим на "hashi-ui" в управление джобами и рестартуем "runner-job":
+      ![gitlab-runnner-restart-1](doc/gitlab-runnner-restart-1.png)
+      ![gitlab-runnner-restart-1.png](doc/gitlab-runnner-restart-1.png)
+      - после перезапуска джоба раннер должен появиться в списке: 
+      ![gitlab-runnner-present](doc/gitlab-runnner-present.png)
+      - Ранеры "одноразовые/стайтлэс" - поэтому список может содержать не действительные экзэмпляры и этот список нужно/можно чистить. Количество ранеров можно задавать при старте или при реконфигурировании.
       
       
-- Вернемся в "hashi-ui" и проверим что KV значения хранят нужные нам данные. Это "gitlab/runner_ca" и gitlab/runner_token":    
-  Передем в настройки "Consul", зайдем в KV хранилише и посмотрим значения ключей в "gitlab" ветке:
-  ![hashi-ui-consul-kv-gitlab](doc/hashi-ui-consul-kv-gitlab-all.png)
- 
- - Если их нет, или остутствует один из них нужно перезапустить задание отвечающее за наполнение данной ветки KV хранилища в нашем кластере: 
-  ![hashi-ui-nomad-restart-gitlab-consul](doc/hashi-ui-nomad-restart-gitlab-consul-all.png)
+
   
   
   
