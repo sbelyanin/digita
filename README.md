@@ -263,11 +263,17 @@ cluster-node-01 | SUCCESS => {
   ![gitlab-create-project-ui](doc/gitlab-create-project-ui.png)
   ![gitlab-create-projects-done](doc/gitlab-create-projects-done.png)
   
-  В проекте app будем размещаться само тестовое приложение "crawler", а в ui - web интерфейс для просмотра резултатов работы приложения.
+   - В проекте app будем размещаться само тестовое приложение "crawler", а в ui - web интерфейс для просмотра резултатов работы приложения.
   
-  - Создадим пользователя "developer", дадим ему права "Owner" на на ранее созданную группу "Crawler" и соответственно на все проекты и субпроекты в этой группе.
-  
-  - Вернемся в "hashi-ui" и проверим что KV значения хранят нужные нам данные. Это "gitlab/runner_ca" и gitlab/runner_token":    
+  - Создадим пользователя "developer", дадим ему права "Owner" на на ранее созданную группу "Crawler" и соответственно на все проекты и субпроекты в этой группе. Также добавим публичный ключ (созданный ранее на этапе подготовки создания кластера) для безопастного подключения к SVC проектов:
+      - Создаем пользователя "developer":
+      ![gitlab-create-new-user](doc/gitlab-create-new-user.png)
+      ![gitlab-create-new-user-1](doc/gitlab-create-new-user-1.png)
+      ![gitlab-create-new-user-2](doc/gitlab-create-new-user-2.png)
+      ![gitlab-create-new-user-3](doc/gitlab-create-new-user-3.png)
+      ![gitlab-create-new-user-impersonate](doc/gitlab-create-new-user-impersonate.png)
+      
+- Вернемся в "hashi-ui" и проверим что KV значения хранят нужные нам данные. Это "gitlab/runner_ca" и gitlab/runner_token":    
   Передем в настройки "Consul", зайдем в KV хранилише и посмотрим значения ключей в "gitlab" ветке:
   ![hashi-ui-consul-kv-gitlab](doc/hashi-ui-consul-kv-gitlab-all.png)
  
