@@ -270,7 +270,7 @@ cluster-node-01 | SUCCESS => {
   ![gitlab-create-project-ui](doc/gitlab-create-project-ui.png)
   ![gitlab-create-projects-done](doc/gitlab-create-projects-done.png)
   
-   - В проекте app будем размещаться само тестовое приложение "crawler", а в ui - web интерфейс для просмотра резултатов работы приложения.
+   - В проекте app будем размещаться тестовое приложение "crawler", а в ui - web интерфейс для просмотра резултатов работы приложения.
   
   - Создадим пользователя "developer", дадим ему права "Owner" на на ранее созданную группу "Crawler" и соответственно на все проекты и субпроекты в этой группе. Также добавим публичный ключ (созданный ранее на этапе подготовки создания кластера) для безопастного подключения к SVC проектов:
       - Создаем пользователя "developer":
@@ -288,16 +288,8 @@ cluster-node-01 | SUCCESS => {
       ![gitlab-runnner-absent](doc/gitlab-runnner-absent.png)
       - переходим на "hashi-ui" в управление джобами и рестартуем "runner-job":
       ![gitlab-runnner-restart-1](doc/gitlab-runnner-restart-1.png)
-      ![gitlab-runnner-restart-1.png](doc/gitlab-runnner-restart-1.png)
+      ![gitlab-runnner-restart-2](doc/gitlab-runnner-restart-2.png)
       - после перезапуска джоба раннер должен появиться в списке: 
       ![gitlab-runnner-present](doc/gitlab-runnner-present.png)
       - Ранеры "одноразовые/стайтлэс" - поэтому список может содержать не действительные экзэмпляры и этот список нужно/можно чистить. Количество ранеров можно задавать при старте или при реконфигурировании.
       
-      
-
-  
-  
-  
-  
-
- 
