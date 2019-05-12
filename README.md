@@ -272,6 +272,10 @@ cluster-node-01 | SUCCESS => {
       ![gitlab-create-new-user-2](doc/gitlab-create-new-user-2.png)
       ![gitlab-create-new-user-3](doc/gitlab-create-new-user-3.png)
       ![gitlab-create-new-user-impersonate](doc/gitlab-create-new-user-impersonate.png)
+      ![gitlab-create-new-user-profile](doc/gitlab-create-new-user-profile.png)
+      ![gitlab-create-new-user-pkey](doc/gitlab-create-new-user-pkey.png)
+      ![gitlab-create-new-user-done](doc/gitlab-create-new-user-donw.png)
+      
       
 - Вернемся в "hashi-ui" и проверим что KV значения хранят нужные нам данные. Это "gitlab/runner_ca" и gitlab/runner_token":    
   Передем в настройки "Consul", зайдем в KV хранилише и посмотрим значения ключей в "gitlab" ветке:
