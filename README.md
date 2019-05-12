@@ -262,7 +262,7 @@ cluster-node-01 | SUCCESS => {
   ![hashi-ui-consul-kv-gitlab](doc/hashi-ui-consul-kv-gitlab-all.png)
  
  - Если их нет, или остутствует один из них нужно перезапустить задание отвечающее за наполнение данной ветки KV хранилища в нашем кластере: 
-  
+  ![hashi-ui-nomad-restart-gitlab-consul](doc/hashi-ui-nomad-restart-gitlab-consul-all.png)
   
   
   
