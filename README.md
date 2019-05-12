@@ -254,7 +254,17 @@ cluster-node-01 | SUCCESS => {
   - Зайдем на http://gitlab/, введем пароль для административного пользователя root:
   ![gitlab-reg](doc/gitlab-reg.png)
   - Войдем под пользователем "root" с введеным ранее паролем в систему gitlab.
-  - Создадим группу "crawler" и в ней два проекта - "app" и "ui". В проекте app будем размещаться само тестовое приложение "crawler", а в ui - web интерфейс для просмотра резултатов работы приложения.
+  - Создадим группу "crawler":
+  ![gitlab-create-group](doc/gitlab-create-group.png)
+  ![gitlab-create-group-done](doc/gitlab-create-group-done.png)
+  - и в ней два проекта - "app" и "ui":
+  ![gitlab-create-projects](doc/gitlab-create-projects.png)
+  ![gitlab-create-project-app](doc/gitlab-create-project-app.png)
+  ![gitlab-create-project-ui](doc/gitlab-create-project-ui.png)
+  ![gitlab-create-projects-done](doc/gitlab-create-projects-done.png)
+  
+  В проекте app будем размещаться само тестовое приложение "crawler", а в ui - web интерфейс для просмотра резултатов работы приложения.
+  
   - Создадим пользователя "developer", дадим ему права "Owner" на на ранее созданную группу "Crawler" и соответственно на все проекты и субпроекты в этой группе.
   
   - Вернемся в "hashi-ui" и проверим что KV значения хранят нужные нам данные. Это "gitlab/runner_ca" и gitlab/runner_token":    
