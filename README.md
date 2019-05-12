@@ -6,8 +6,8 @@
     - Зачем?
     - Выбор.
     - Общий план.  
-2. Global Requrenments
-3. Local Requrenments
+2. Global Requirements
+3. Local Requirements
     - Linux Workstation
     - Git
     - Ansible
@@ -37,11 +37,11 @@
       - Общий план нашего кластера:
  ![Cluster](/doc/digita-01.png)
 
-## 2. Global Requrenments
-- GCP account https://cloud.google.com/ - Потребуется Банковская карта для регистрации акаунта.
+## 2. Global Requirements
+- GCP account https://cloud.google.com/ - Потребуется банковская/пластиковая карта для регистрации акаунта.
  
-## 3. Local Requrenments
-- Linux Workstation (Ubuntu, Debian, CentOS)
+## 3. Local Requirements
+- Linux Workstation (Ubuntu, Debian, CentOS ...)
 - Git:
 ```bash
 #Ubuntu, Debian
