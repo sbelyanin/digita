@@ -340,5 +340,8 @@ vim ~/.ssh/config
  - Создадим ветку "develop" от мастера и посмотрим какой пайплайн получиться:
  ![gitlab-pipeline-app-branch-all](doc/gitlab-pipeline-app-branch-all.png)
  Здесь все задачи по созданию, публикации и запуска докер образа "crawler_app:branch" запускаются последовательно и автоматически при появлении изменений в branch ветки приложения. Также присутствуют задачи по запуску/остановки stateless ДБ mongodb для branch релиза приложения (nomad job - mongodb-branch-job). Дополнительно можно остановить БД и приложение branch ветки. 
-      
+ 
+ - Посмотрим каков пайплайн для Web UI приложения:
+ ![gitlab-pipeline-ui-all](doc/gitlab-pipeline-ui-all.png)
+ - Отличия от самого приложения в паплайне минимальны - работа в мастер ветке ведется с докер образами "crawler_ui:master" и "crawler_ui:release", а в branch ветках - "crawler_ui:branch". Также на при выполнении этапов "Review" и "Deploy-release" Web UI будет доступен по ссылкам https://crawler/ , https://crawler-master/ , https://crawler-master/.   
       
