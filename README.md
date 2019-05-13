@@ -33,7 +33,7 @@
       - Nomad HashiCorp как система оркестрации контейнеров - как альтернатива K8S.
       - Consul HashiCorp децентрализованный отказоустойчивый discovery-сервис - хорошая интеграция с Nomad и другими сервисами.
       - GitLab CE - современное популярное решение для управления разработкой программного обеспечения.
-      - Prometheus - рограммный проект с открытым исходным кодом, написанный на Go, который используется для записи метрик в реальном времени в базе данных временных рядов.
+      - Prometheus - программный проект с открытым исходным кодом, написанный на Go, который используется для записи метрик в реальном времени в базе данных временных рядов.
       - Общий план нашего кластера:
  ![Cluster](/doc/digita-01.png)
 
@@ -87,10 +87,10 @@ pip install requests google-auth apache-libcloud
 ```bash
 openssl version
 ```
- - GCP SDK (gcloud) https://cloud.google.com/sdk/install
-Quickstart for Linux - https://cloud.google.com/sdk/docs/quickstart-linux
-Debian/Ubuntu - https://cloud.google.com/sdk/docs/downloads-apt-get
-CentOS/RHEL - https://cloud.google.com/sdk/docs/downloads-yum
+ - GCP SDK (gcloud) https://cloud.google.com/sdk/install    
+Quickstart for Linux - https://cloud.google.com/sdk/docs/quickstart-linux    
+Debian/Ubuntu - https://cloud.google.com/sdk/docs/downloads-apt-get    
+CentOS/RHEL - https://cloud.google.com/sdk/docs/downloads-yum   
  - Быстрый тест:
 ```bash
 gcloud auth list
