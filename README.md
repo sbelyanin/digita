@@ -18,8 +18,8 @@
 4. Подготовка
 5. Cluster Install
 6. Gitlab Install
-7. Prometheus Install
-8. Setup pipeline
+7. Setup pipeline
+8. Prometheus Install
 
 
 ## 1. Introduce
@@ -292,4 +292,37 @@ cluster-node-01 | SUCCESS => {
       - после перезапуска джоба раннер должен появиться в списке: 
       ![gitlab-runnner-present](doc/gitlab-runnner-present.png)
       - Ранеры "одноразовые/стайтлэс" - поэтому список может содержать не действительные экзэмпляры и этот список нужно/можно чистить. Количество ранеров можно задавать при старте или при реконфигурировании.
+      
+## 7. Setup pipeline
+ - Приступим к наполнению наших проектов. Для удобства "общения" с нашими репозитариями воспользуемся услугами ssh и ранее созданной пары ключей:
+```bash
+>> ~/.ssh/config && chmod 600 ~/.ssh/config
+vim ~/.ssh/config
+##Insert:
+#Host            gitlab
+#HostName        gitlab
+#Port            1022
+#User            developer
+#IdentityFile    ~/.ssh/developer
+```
+  - Зальем содержимое директорий "digita/crawler/app" и "digita/crawler/ui" в наши репозитарии GitLab:
+      - "app". Найдем ссылку на репозитарий в gitlab:
+      ![gitlab-repo-app](doc/gitlab-repo-app.png)
+      - "ui":
+      ![gitlab-repo-ui](doc/gitlab-repo-ui.png)
+      - Проинициализируем директории с исходниками и зальем их в репозитарии gitlab:
+      ```bash
+      ###APP###
+      cd crawler/app && git init
+      git remote add origin git@gitlab:crawler/app.git
+      git add .
+      git commit -m "Initial commit"
+      git push -u origin master
+      ###UI###
+      cd crawler/ui && git init
+      git remote add origin git@gitlab:crawler/ui.git
+      git add .
+      git commit -m "Initial commit"
+      git push -u origin master
+      ```
       
