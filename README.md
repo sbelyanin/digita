@@ -325,4 +325,9 @@ vim ~/.ssh/config
       git commit -m "Initial commit"
       git push -u origin master
       ```
+      - Проверим что наш "pipeline" готов к работе на примере основного приложения "app". Зайдемм в UI GitLab и перейдем по ссылкам "Projects", "crawler/app", "CI/CD":
+      ![gitlab-pipeline-app](doc/gitlab-pipeline-app.png)
+      видим что первая задача в пайплайне (тестирование кода) выполнено и дальнейшие шаги нужно запускать в ручную (данное поведение настраивается в .gitlab-ci.yml). Посмотрим что же можно слелать дальше:
+      ![gitlab-pipeline-app-all](doc/gitlab-pipeline-app-all.png):
+      
       
