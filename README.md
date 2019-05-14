@@ -345,3 +345,13 @@ vim ~/.ssh/config
  ![gitlab-pipeline-ui-all](doc/gitlab-pipeline-ui-all.png)
  - Отличия от самого приложения в паплайне минимальны - работа в мастер ветке ведется с докер образами "crawler_ui:master" и "crawler_ui:release", а в branch ветках - "crawler_ui:branch". Также при выполнении этапов "Review" и "Deploy-release" Web UI будет доступен по ссылкам https://crawler/ , https://crawler-master/ , https://crawler-master/.   
       
+## 7. Prometheus setup
+ - Приступим к мониторингу, установим Prometheus и Grafana:
+ ```bash
+ cd ~/digita/ansible
+ ansible-playbook playbooks/jobs_gitlab_install.yml
+ ```
+ - После инсталяции зайдем на https://prometheus/targets и убедимся что все наши таргеты подняты:
+ ![prometheus-target-all](doc/prometheus-target-all.png)
+ - Посмотрим состояние Grafana, зайдем на https://grafana/ (admin/GraFanA):
+ ![grafana-welcome](doc/grafana-welcome.png)
