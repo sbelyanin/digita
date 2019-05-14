@@ -355,3 +355,13 @@ vim ~/.ssh/config
  ![prometheus-target-all](doc/prometheus-target-all.png)
  - Посмотрим состояние Grafana, зайдем на https://grafana/ (admin/GraFanA):
  ![grafana-welcome](doc/grafana-welcome.png)
+ - Импортируем дашбоард для нашего приложения и дашбоард "Node Exporter Full(1860)". Перейдем на страницу импорта дашбоардов в графане:
+ ![grafana-import-dashboard](doc/grafana-import-dashboard.png)
+ Загрузим из "ansible/files/grafana" дашбоарды "crawler-v*" и "1860".
+ - для мониторинга хостовых систем метрик от "node-exporter" будет предостаточно:
+ ![grafana-dashboard-1860](doc/grafana-dashboard-1860.png)
+ - для мониторинга приложения "crawler" будем использовать метрики от самого приложения через дашбоард "crawler":
+ ![grafana-dashboard-crawler](doc/grafana-dashboard-crawler.png) 
+ - для тестирования новой возможности по провижененгу дашбоардов и датасоурсов были опробованны датасоурс - prometheus и дашбоард "Docker and Host Monitoring w/ Prometheus". (Мы ведь их не настраивали при инсталяции?):
+     - ![grafana-dashboard-docker-host](doc/grafana-dashboard-docker-host.png) 
+     - ![grafana-ds-prometheus](doc/grafana-ds-prometheus.png) 
