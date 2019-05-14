@@ -343,7 +343,9 @@ vim ~/.ssh/config
  
  - Посмотрим каков пайплайн для Web UI приложения:
  ![gitlab-pipeline-ui-all](doc/gitlab-pipeline-ui-all.png)
- - Отличия от самого приложения "crawler" в паплайне "UI" минимальны - работа в мастер ветке ведется с докер образами "crawler_ui:master" и "crawler_ui:release", а в branch ветках - "crawler_ui:branch". Также при выполнении этапов "Review" и "Deploy-release" Web UI будет доступен по ссылкам https://crawler/ , https://crawler-master/ , https://crawler-branch/.   
+ - Отличия от самого приложения "crawler" в паплайне "UI" минимальны - работа в мастер ветке ведется с докер образами "crawler_ui:master" и "crawler_ui:release", а в branch ветках - "crawler_ui:branch". Также при выполнении этапов "Review" и "Deploy-release" Web UI будет доступен по ссылкам https://crawler/ , https://crawler-master/ , https://crawler-branch/.
+ - Взглянем на текущее количество задач которое обслуживает наш кластер:
+ ![Nomad-Jobs-All](doc/Nomad-Jobs-All.png)
       
 ## 7. Prometheus setup
  - Приступим к мониторингу, установим Prometheus и Grafana:
@@ -362,6 +364,6 @@ vim ~/.ssh/config
  ![grafana-dashboard-1860](doc/grafana-dashboard-1860.png)
  - для мониторинга приложения "crawler" будем использовать метрики от самого приложения через дашбоард "crawler":
  ![grafana-dashboard-crawler](doc/grafana-dashboard-crawler.png) 
- - для тестирования новой возможности по провижененгу дашбоардов и датасоурсов были опробованны датасоурс - prometheus и дашбоард "Docker and Host Monitoring w/ Prometheus". (Мы ведь их не настраивали при инсталяции?):
+ - для тестирования новой возможности по провижиненгу дашбоардов и датасоурсов были опробованны: датасоурс - prometheus и дашбоард "Docker and Host Monitoring w/ Prometheus". (Мы ведь их не настраивали при инсталяции?):
      - ![grafana-dashboard-docker-host](doc/grafana-dashboard-docker-host.png) 
      - ![grafana-ds-prometheus](doc/grafana-ds-prometheus.png) 
