@@ -343,7 +343,7 @@ vim ~/.ssh/config
  
  - Посмотрим каков пайплайн для Web UI приложения:
  ![gitlab-pipeline-ui-all](doc/gitlab-pipeline-ui-all.png)
- - Отличия от самого приложения в паплайне минимальны - работа в мастер ветке ведется с докер образами "crawler_ui:master" и "crawler_ui:release", а в branch ветках - "crawler_ui:branch". Также при выполнении этапов "Review" и "Deploy-release" Web UI будет доступен по ссылкам https://crawler/ , https://crawler-master/ , https://crawler-master/.   
+ - Отличия от самого приложения "crawler" в паплайне "UI" минимальны - работа в мастер ветке ведется с докер образами "crawler_ui:master" и "crawler_ui:release", а в branch ветках - "crawler_ui:branch". Также при выполнении этапов "Review" и "Deploy-release" Web UI будет доступен по ссылкам https://crawler/ , https://crawler-master/ , https://crawler-branch/.   
       
 ## 7. Prometheus setup
  - Приступим к мониторингу, установим Prometheus и Grafana:
