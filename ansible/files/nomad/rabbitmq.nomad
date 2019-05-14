@@ -11,8 +11,7 @@ job "rabbitmq-job" {
     }
     ephemeral_disk {
       size = 500
-      sticky = true
-      
+      sticky = true      
     }
     task "rabbitmq" {
       driver = "docker"
@@ -27,8 +26,8 @@ job "rabbitmq-job" {
         dns_servers = ["172.17.0.1", "8.8.8.8", "8.8.4.4"]
       }
       resources {
-        cpu    = "300"
-        memory = "200"
+        cpu    = "600"
+        memory = "450"
         network {
           mbits = 10
           port "web" {}
