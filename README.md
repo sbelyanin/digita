@@ -5,7 +5,8 @@
 1. Введение
     - Зачем?
     - Выбор.
-    - Общий план.  
+    - Общий план.
+    - Приложение.
 2. Global Requirements
 3. Local Requirements
     - Linux Workstation
@@ -20,6 +21,7 @@
 6. Gitlab Install
 7. Setup pipeline
 8. Prometheus Install
+9. Changelog
 
 
 ## 1. Introduce
@@ -36,6 +38,14 @@
       - Prometheus - программный проект с открытым исходным кодом, написанный на Go, который используется для записи метрик в реальном времени в базе данных временных рядов.
       - Общий план нашего кластера:
  ![Cluster](/doc/digita-01.png)
+ - ### Приложение, которое будет использоваться для тестирования системы.
+     - Должно быть компактным, не монолитным. Желательно написаное на распостраненном языке програмирования. Без изысков работать в контейнере.
+     - Выберем "Crawler":     
+     https://github.com/express42/search_engine_crawler    
+     https://github.com/express42/search_engine_ui    
+     - схема работы и компонентов:
+     ![crawler-review1](doc/crawler-review1.png)
+     ![crawler-review2](doc/crawler-review2.png)     
 
 ## 2. Global Requirements
 - GCP account https://cloud.google.com/ - Потребуется банковская/пластиковая карта для регистрации акаунта.
