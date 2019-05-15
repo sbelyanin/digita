@@ -109,6 +109,9 @@ scrape_configs:
     consul_sd_configs:
     - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
       services: ['crawler-app-master', 'crawler-app', 'crawler-app-branch']
+    relabel_configs:
+    - source_labels: ['__meta_consul_service']
+      target_label: instance
 EOH
       }
       driver = "docker"
