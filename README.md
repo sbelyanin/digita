@@ -1,4 +1,5 @@
 # DIGITA - make CI/CD easy
+#### v1.0
 
 # Оглавление
 
@@ -380,3 +381,16 @@ vim ~/.ssh/config
  - для тестирования новой возможности по провижиненгу дашбоардов и датасоурсов были опробованны: датасоурс - prometheus и дашбоард "Docker and Host Monitoring w/ Prometheus". (Мы ведь их не настраивали при инсталяции?):
      - ![grafana-dashboard-docker-host](doc/grafana-dashboard-docker-host.png) 
      - ![grafana-ds-prometheus](doc/grafana-ds-prometheus.png) 
+
+## 9. Changelog
+ - v1.0 Создание документации.
+ - v0.9 Создание PipeLine для приложения.
+ - v0.8 Добавление установки efk на кластер. Первоначальная настройка.
+ - v0.7 Добавление установки Prometheus на кластер. Настройка экспортеров. Добавление Grafana. Создание кастомного дашбоарда для приложения "crawler".
+ - v0.6 Добавление установки gitlab ce на кластер. Настройка gitlab runner.
+ - v0.5 Внедрение hashi-ui. Перенос UI consul и nomad в hasi-ui. 
+ - v0.4 Настройка создание self signet certs и работоспособность docker registry с ними.
+ - v0.3 Тестирование fabio, nginx и traefik в качестве edge router - выбран traefik.
+ - v0.2 Изменение в кодовой базе ролей инсталяции consul и nomad. Изменение поределение ролей нод в кластере при использовании dynamic inventory.
+ - v0.1 Создание ansinle playbook для инсталяции хостов кластера и наливки docker, nomad и consul на них. Для consul и nomad были выбраны ролу из галакси - https://galaxy.ansible.com/brianshumate/consul/ и https://galaxy.ansible.com/brianshumate/nomad. 
+ Для накатки докера простенький - https://galaxy.ansible.com/geerlingguy/docker
