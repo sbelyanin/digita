@@ -254,7 +254,7 @@ cluster-node-01 | SUCCESS => {
  export RESOLV=`./inventory.py --refresh-cache | jq -r '._meta.hostvars."cluster-node-01".gce_public_ip'`
  echo -e "$RESOLV gitlab hashi-ui rabbitmq crawler-master crawler-branch crawler prometheus grafana kibana\n" | sudo tee -a /etc/hosts
  ```
- - Зайдем на https://hashi-ui (сторонний web ui для Consul и Nomad) и проверим работу кластера. Т.к. на сертификат самоподписанный в браузере придется подтвердить исключение безопасности:
+ - Зайдем на https://hashi-ui (сторонний web ui для Consul и Nomad) и проверим работу кластера. Т.к. наш сертификат самоподписанный в браузере придется подтвердить исключение безопасности:
   ![Hashi-ui](/doc/Nomad-Hashi-UI.png)
   
 ## 6. Gitlab Install
@@ -392,5 +392,5 @@ vim ~/.ssh/config
  - v0.4 Настройка создание self signet certs и работоспособность docker registry с ними.
  - v0.3 Тестирование fabio, nginx и traefik в качестве edge router - выбран traefik.
  - v0.2 Изменение в кодовой базе ролей инсталяции consul и nomad. Изменение поределение ролей нод в кластере при использовании dynamic inventory.
- - v0.1 Создание ansinle playbook для инсталяции хостов кластера и наливки docker, nomad и consul на них. Для consul и nomad были выбраны ролу из галакси - https://galaxy.ansible.com/brianshumate/consul/ и https://galaxy.ansible.com/brianshumate/nomad. 
+ - v0.1 Создание ansinle playbook для инсталяции хостов кластера и наливки docker, nomad и consul на них. Для consul и nomad были выбраны роли из галакси - https://galaxy.ansible.com/brianshumate/consul/ и https://galaxy.ansible.com/brianshumate/nomad. 
  Для накатки докера простенький - https://galaxy.ansible.com/geerlingguy/docker
