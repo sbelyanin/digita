@@ -49,8 +49,23 @@
      ![crawler-review2](doc/crawler-review2.png)
      - Исходники пришлось немного поправить для параметризации некоторых захардкоженных параметров (сервисы могут слушать на не стандартных портах).
          <details><summary>подробности</summary><p>
+
          ```bash
+         diff crawler.origin.py crawler.py 
+         44a45,46
+         >             port=mqport,
+         >             virtual_host=mqvhost,
+         80a83,85
+         > 
+         > mqport = int(getenv('RMQ_PORT', '5672'))
+         > mqvhost = getenv('RMQ_VHOST', '/')
+         
+         diff README.origin.md README.md 
+         24a25,27
+         > * `RMQ_PORT` - номер порта для подключения к `rabbitmq`
+         > * `RMQ_VHOST` - виртуальный хост в `rabbitmq`
          ```
+
          </p></details>
          
 ## 2. Global Requirements
