@@ -46,8 +46,13 @@
      https://github.com/express42/search_engine_ui    
      - схема работы и компонентов:
      ![crawler-review1](doc/crawler-review1.png)
-     ![crawler-review2](doc/crawler-review2.png)     
-
+     ![crawler-review2](doc/crawler-review2.png)
+     - Исходники пришлось немного поправить для параметризации некоторых захардкоженных параметров (сервисы могут слушать на не стандартных портах).
+         <details><summary>подробности</summary><p>
+         ```bash
+         ```
+         </p></details>
+         
 ## 2. Global Requirements
 - GCP account https://cloud.google.com/ - Потребуется банковская/пластиковая карта для регистрации акаунта.
 - В процессе работы потребуется виртуалки с общим обьемом памяти около 16-24Gb. Если отключить все сервисы по разработке, логированию и мониторинга, то потребуется около 4Gb RAM.
