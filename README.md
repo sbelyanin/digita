@@ -56,7 +56,7 @@
  
 ## 3. Local Requirements
 - Linux Workstation (Ubuntu, Debian, CentOS ...)
-- Git:
+- Git - https://github.com/git/git:
 ```bash
 #Ubuntu, Debian
 sudo apt update && sudo apt install git
@@ -123,9 +123,19 @@ account = youaccount@gmail.com
 disable_usage_reporting = True
 project = you_gcp_project
 ```
-- Jq
+- Jq - https://github.com/stedolan/jq
 ```bash
+wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O jq && chmod +x jq && mv jq /usr/local/bin
+
+#In debian or ubuntu:
 sudo apt install jq
+
+#In centos or rhel whith EPEL repo on (yum install epel-release -y):
+yum install jq -y
+
+#Test:
+jq --version
+
 ```
 - GCP Credentials. Для совместной работы Ansible и GCP нужно предоставить полномочия Ansible:
     - Ссылка на документацию Ansible по этому вопросу - https://docs.ansible.com/ansible/latest/scenario_guides/guide_gce.html
